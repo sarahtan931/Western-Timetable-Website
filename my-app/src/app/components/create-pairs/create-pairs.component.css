@@ -1,0 +1,22 @@
+.createpair{
+    background: lightgoldenrodyellow;
+    position: absolute;
+    height: 300px;
+    top: 900px;
+    width: 375px;
+    left: 25px;
+    overflow-y: scroll;
+}
+
+body {
+    text-align: center;
+}
+form {
+    display: inline-block;
+}
+
+.err{
+    background-color: rgb(255, 188, 198);
+    text-align: center;
+}
+

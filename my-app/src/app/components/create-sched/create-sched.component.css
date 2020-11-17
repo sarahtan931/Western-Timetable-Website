@@ -1,0 +1,14 @@
+.createsched{
+    background: lightgoldenrodyellow;
+    position: absolute;
+    height: 450px;
+    top: 420px;
+    width: 400px;
+    left: 425px;
+}
+
+.err{
+    background-color: rgb(255, 188, 198);
+    text-align: center;
+}
+

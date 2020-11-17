@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+
+<body>
+<div class='showpair'>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <input [(ngModel)]="name" name='name' placeholder="Input Schedule Name">
+        <button>Submit</button>
+      </form>
+
+      <div class="err" *ngIf="errorMessage">{{ errorMessage }} {{msg}}</div>
+
+      <table>
+        <tbody>
+            <tr *ngFor="let c of sched">
+              <td>
+              {{c?.subject}}
+              {{c?.catalogueNumber}}
+            <br>
+              Start Time: {{c?.course_info[0].start_time}}
+              End Time: {{c?.course_info[0].end_time}}<br>
+              Days: {{c?.course_info[0].days}}
+              Campus: {{c?.course_info[0].campus}}
+              Section: {{c?.course_info[0].class_section}}<br>
+              Description: {{c?.course_info[0].descr}}
+            </td> 
+            </tr>
+        </tbody>
+      </table>
+</div>
+</body>

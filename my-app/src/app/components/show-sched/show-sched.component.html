@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+
+<body>
+<div class='showsched'>
+    <button (click)="showSched()">Show all Schedules</button>
+    <div class="err" *ngIf="errorMessage">{{ errorMessage }} {{msg}}</div>
+
+   <table>
+    <tbody>
+        <tr *ngFor="let s of schedule">
+          <td>
+            {{s.name}} Courses: {{s.courses}}
+        </td> 
+        </tr>
+    </tbody>
+  </table>
+</div>
+</body>

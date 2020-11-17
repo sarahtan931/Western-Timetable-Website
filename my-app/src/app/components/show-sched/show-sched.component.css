@@ -1,0 +1,28 @@
+.showsched{
+    background: lightgoldenrodyellow;
+    position: absolute;
+    height: 300px;
+    top: 900px;
+    width: 400px;
+    left: 425px;
+    overflow-y: scroll;
+}
+
+table, th, td {
+    border: 1px solid black;
+    width: 100%;
+    background-color: #c4f3ae;
+    text-align: center;
+}
+
+tbody:empty {
+    display: none;
+ }
+
+ .err{
+    background-color: rgb(255, 188, 198);
+    text-align: center;
+}
+
+
+
