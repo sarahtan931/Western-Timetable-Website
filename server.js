@@ -1,16 +1,13 @@
-const fs=require('fs');
-//var path = require('path');
+const fs = require('fs');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const express = require('express');
 const app = express()
 const router = express.Router()
 const stringSimilarity = require('string-similarity');
-
 const {check , validationResult}  = require('express-validator');
 const e = require('express');
 var cors = require('cors')
-
 app.use(cors())
 
 //reading JSON file
@@ -40,6 +37,7 @@ const timetables = new Schema({
     numCourses:{ type: Number},
     description: {type: String},
     date: {type: Date},
+    editdate: {type: Date},
     hidden: {type: Boolean}
 })
 
@@ -160,9 +158,16 @@ router.post('/auth/makeschedule', [
         console.log(err.mapped())
         res.status(404).send(`Not valid input`);
     } else {
-    let name = req.body.name;
-    let owner = req.body.owner;
-    let description = req.body.description;
+        let courseNum = req.body.courseNum;
+        let courseId = req.body.courseId;
+        let name = req.body.name;
+        let owner = req.body.owner;
+        let description = req.body.description;
+        let hidden = req.body.hidden;
+
+    if (typeof hidden == "undefined"){
+        hidden = true;
+    }
     Timetable.countDocuments({"owner": owner}, function(err, count){
         console.log( "Number of course lists from ",owner, " ", count);
         if (count > 20){
@@ -170,18 +175,43 @@ router.post('/auth/makeschedule', [
         }
     })
     Timetable.findOne(({"name": name, "owner": owner}), function (err, timetable) {
-        if (err || timetable){ 
+        if (err || timetable || typeof courseNum == "undefined" || typeof courseId == "undefined"){ 
             res.status(404).send(`Already Exists`);
         }
         else{
-        const timetable = new Timetable({ 
+        let numArr = courseNum.split(" ");
+        let idArr = courseId.split(" ");
+        let newarr = [];
+        for (let i = 0; i < numArr.length; i++){ 
+            //only allowing the user to enter a valid timetable        
+            if(numArr[i] != "" && idArr[i] !="" && newdata.find(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])){
+                const data = newdata.filter(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])
+                data.map(function(e){
+                    newarr.push({
+                        "classname": e.className,
+                        "class_section": e.course_info[0].class_section,
+                        "ssr_component":e.course_info[0].ssr_component,
+                        "course_info": e.course_info[0],
+                        "catalog_nbr": e.catalog_nbr,
+                        "subject": e.subject
+                    });
+                    })
+            }
+            else{
+                res.status(404).send(`Please enter a valid timetable input`);
+                return;
+            }
+        }
+        const schedule = new Timetable({ 
             "owner": owner,
             "name": name,
             "description": description,
             "date": new Date(),
-
+            "hidden": hidden,
+            "timetable": newarr
          })
-        timetable.save()
+        
+        schedule.save()
         .then((result) => res.send(result))
         .catch((err) => console.log(err))
         }
@@ -189,7 +219,45 @@ router.post('/auth/makeschedule', [
     }  
 })
 
+//show schedules 
+router.get('/auth/showschedule/:owner',(req, res) =>{
+    let newarr = []
+    owner = req.params.owner;
+    Timetable.find(({"owner": owner}), function (err, review) {
+        if (err || !review ){
+            res.status(404).send(`not found`);
+        }
+        else {
+              let arr = review.map(function(e) {
+                 newarr.push({
+                    "owner": e.owner,
+                    "name": e.name,
+                    "description": e.description,
+                    "date": e.date,
+                  })
+              })
+              const sorted = newarr.sort((a, b) => b.date - a.date)
+              res.send(sorted);
+            }    
+    })           
+})
 
+//deletes schedules with a certain name
+router.delete('/auth/schedule/del/:owner/:name', (req, res) =>{
+    const name = req.params.name;
+    const owner = req.params.owner;
+    Timetable.findOne(({"owner":owner,"name": name}), function (err, timetable) {
+        if (err || !timetable || timetable.length <= 0){ 
+            res.status(404).send(`not found`);
+        }
+        else{
+        timetable.deleteOne({"name": name})
+        .then((result) => res.send(result))
+        .catch((err) => console.log(err))
+      
+        }
+      })    
+})
 
 //searching for a component
 router.get('/open/:subject/:catalog_nbr/', (req,res) =>{
