@@ -9,6 +9,7 @@ const {check , validationResult}  = require('express-validator');
 const e = require('express');
 var cors = require('cors')
 app.use(cors())
+mongoose.set('useFindAndModify', false);
 
 //reading JSON file
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
@@ -82,6 +83,40 @@ router.post('/auth/makereview/', (req, res)=>{
         .catch((err) => console.log(err))
         }
     }) 
+
+//search catalog_nbr and class name
+router.get('/open/searchkeyword/:keyword', (req, res) => {
+    keyword = req.params.keyword;
+    keyword = keyword.replace(/\s/g, '');
+    keyword = keyword.toString().toUpperCase();
+        if (keyword.length > 4 && (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5))){
+            const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5)
+            let arr = data.map(function(e){
+                return{
+                    catalog_nbr: e.catalog_nbr,
+                    subject: e.subject
+                }
+            })
+            res.send(arr)
+        }
+        else if (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.catalog_nbr.toString()) > .8)) {
+           {
+                const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.catalog_nbr.toString()) > .8)
+                let arr = data.map(function(e){
+                    return{
+                        catalog_nbr: e.catalog_nbr,
+                        subject: e.subject
+                    }
+                })
+                res.send(arr)
+            }
+        }
+        else{   
+            res.status(404).send(`not found`);
+        }
+   
+})
+
 
 //show all reviews for admin
 router.get('/admin/showreview', (req, res) =>{
@@ -210,7 +245,6 @@ router.post('/auth/makeschedule', [
             "hidden": hidden,
             "timetable": newarr
          })
-        
         schedule.save()
         .then((result) => res.send(result))
         .catch((err) => console.log(err))
@@ -219,7 +253,43 @@ router.post('/auth/makeschedule', [
     }  
 })
 
-//show schedules 
+//update existing schedule
+router.put('/auth/updateschedule', [
+    check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
+    check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
+    ], (req, res)=>{
+    var err = validationResult(req);
+    let name = req.body.name;
+    let courseNum = req.body.courseNum;
+    let courseId = req.body.courseId;
+    let description = req.body.description;
+    let hidden = req.body.hidden;
+
+    let numArr = courseNum.split(" ");
+    let idArr = courseId.split(" ");
+    let arr = []
+    Timetable.findOne(({"name": name}), function (err, timetable) {
+        if (err || !timetable || timetable.length <= 0){ 
+            res.status(404).send(`not found`);
+        }
+         else{ 
+            for (let i = 0; i < numArr.length; i++){ 
+                    //only allowing the user to enter a valid timetable   
+                if(numArr[i] != "" && idArr[i] !="" && newdata.find(p => p.subject === numArr[i] && p.catalog_nbr === idArr[i])){
+                    arr.push({courseName: numArr[i], courseID: idArr[i]});
+                }
+            }   
+            timetable.course = arr;
+            timetable.description = description;
+            timetable.hidden = hidden;
+
+            timetable.save() 
+            res.send(timetable) 
+            }  
+        })
+}) 
+        
+//show schedules to owner
 router.get('/auth/showschedule/:owner',(req, res) =>{
     let newarr = []
     owner = req.params.owner;
@@ -242,6 +312,29 @@ router.get('/auth/showschedule/:owner',(req, res) =>{
     })           
 })
 
+//show all public schedules
+router.get('/open/showschedule/',(req, res) =>{
+    let newarr = []
+    Timetable.find(({"hidden": false}), function (err, review) {
+        if (err || !review ){
+            res.status(404).send(`not found`);
+        }
+        else {
+            review.map(function(e) {
+                 newarr.push({
+                    "owner": e.owner,
+                    "name": e.name,
+                    "description": e.description,
+                    "date": e.date,
+                  })
+              })
+              const sorted = newarr.sort((a, b) => b.date - a.date) 
+              sorted.slice(0, 10);
+              res.send(sorted);
+            }    
+    })           
+})
+
 //deletes schedules with a certain name
 router.delete('/auth/schedule/del/:owner/:name', (req, res) =>{
     const name = req.params.name;
@@ -259,10 +352,28 @@ router.delete('/auth/schedule/del/:owner/:name', (req, res) =>{
       })    
 })
 
+
+//getting all the subject and class names
+router.get('/open/allcourses',(req, res) => {
+    array = []
+    let arr = newdata.map(function(e){
+        return{
+            subject: e.subject,
+            className: e.className,
+            course_info: e.course_info[0]
+            
+        }
+    })
+    res.send(arr)
+   
+    
+})
+
 //searching for a component
 router.get('/open/:subject/:catalog_nbr/', (req,res) =>{
     let subject = req.params.subject;
     let courseNum = req.params.catalog_nbr;
+    //converting it to uppercase to make the search case insensitive
     subject = subject.toUpperCase();
     courseNum = courseNum.toUpperCase();
 
@@ -346,120 +457,5 @@ router.put('/schedule/updatepairs/',[
       })  
     } 
 })
-
-//search for a schedule and find the course pairs 
-router.get('/schedule/find/:sched',(req, res) =>{
-    name = req.params.sched
-    newarr = []
-
-    Timetable.findOne(({"name": name}), function (err, timetable) {
-        if (err || !timetable || timetable.length <= 0 || timetable.course.length <= 0){
-            res.status(404).send(`not found`);
-        }
-        else {
-            for (i = 0; i < timetable.course.length; i++){
-                const data = newdata.filter(p => p.subject === timetable.course[i].courseName && p.catalog_nbr === timetable.course[i].courseID)
-                let arr = data.map(function(e){
-                newarr.push({'subject': e.subject, 'catalogueNumber': e.catalog_nbr, 'course_info': e.course_info});
-                })
-                
-            }
-            res.send(newarr);
-            
-        }
-      })  
-})
-
-//finds all schedules and how many courses they have
-router.get('/schedule/show', (req, res) =>{
-   Timetable.find(function (err, timetable) {
-    if (err || !timetable || timetable.length <= 0){
-        res.status(404).send(`not found`);
-    }
-    else {
-        let arr = timetable.map(function(e){   
-            return{
-                name: e.name,
-                courses: e.course.length,
-            }
-        })
-        res.send(arr);
-    
-    }
-  })
-})
-
-//deletes all schedules
-router.delete('/schedule/del', (req, res) =>{
-    Timetable.countDocuments(function (err, count) {
-        if (!err && count === 0) {
-            res.status(404).send(`not found`);
-        }else{
-            Timetable.deleteMany()
-            .then((result) => res.send(result))
-            .catch((err) => console.log(err) )
-        }
-    });
-})
-
-//deletes schedules with a certain name
-router.delete('/schedule/delwithname/:name', (req, res) =>{
-    console.log(req.body)
-    const name = req.params.name
-    Timetable.findOne(({"name": name}), function (err, timetable) {
-        if (err || !timetable || timetable.length <= 0){ 
-            res.status(404).send(`not found`);
-        }
-        else{
-        timetable.deleteOne({"name": name})
-        .then((result) => res.send(result))
-        .catch((err) => console.log(err))
-      
-        }
-      })    
-})
-
-app.use((req, res, next) =>{
-    console.log(`${req.method} request for ${req.url}`);
-    next()
-})
-
-//getting all the subject and class names
-router.get('/',(req, res) => {
-    array = []
-    let arr = newdata.map(function(e){
-        
-        return{
-            CourseId: e.subject,
-            CourseName: e.className,
-            
-        }
-    })
-    res.send(arr)
-   
-    
-})
-
-//searching for a subject
-router.get('/:subject', (req,res)=> {
-    const subject = req.params.subject;
-
-    if (newdata.find(p => p.subject === subject)){
-    const data = newdata.filter(p => p.subject === subject)
-    let arr = data.map(function(e){
-        return{
-            subject: e.subject,
-            catalog_nbr: e.catalog_nbr,
-            courseInfo: e.course_info
-        }
-    })
-    res.send(arr) 
-   
-    }
-    else {
-        res.status(404).send(`Subject id ${subject} was not found `)
-    }
-})
-
 
 app.use('/api/', router)
