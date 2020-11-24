@@ -12,10 +12,12 @@ var cors = require('cors')
 
 app.use(cors())
 
-
 //reading JSON file
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
 var newdata=JSON.parse(data);
+
+var dataLab5 = fs.readFileSync('Lab5-subject-data.json', 'utf8');
+var lab5data = JSON.parse(data)
 
 //serving static files 
 app.use('/', express.static('static'))
@@ -27,7 +29,7 @@ app.use(bodyParser.json());
 
 //making connection to the database
 const port = process.env.PORT || 3000;
-const uri = "mongodb+srv://stan229:Cheer931@lab3.nggdc.mongodb.net/lab-3?retryWrites=true&w=majority";
+const uri = "mongodb+srv://stan229:Cheer931@lab3.nggdc.mongodb.net/lab-5?retryWrites=true&w=majority";
 mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
 .then((results) => app.listen(port))
 .catch((err) => console.log(err));
@@ -44,8 +46,105 @@ const timetableSchema = new Schema({
     }
 })
 
+const courseReviewSchema = new Schema({
+    reviewID: {type: String},
+    subject: {type: String},
+    catalog_nbr: {type: String},
+    hidden: {type: Boolean},
+    review: {type: String},
+    rating: {type: Number}
+  
+})
+
 const Timetable = mongoose.model('Timetable', timetableSchema)
 module.exports = Timetable;
+
+const Review = mongoose.model('Review', courseReviewSchema)
+module.exports = Review;
+
+//create a review
+router.post('/auth/makereview/', (req, res)=>{
+    let data = req.body;
+    var err = validationResult(req);
+    if (!err.isEmpty()) {
+        console.log(err.mapped())
+        res.status(404).send(`Not valid input`);
+    } else {
+        console.log(data)
+        const review = new Review(data)
+        review.save()
+        .then((result) => res.send(result))
+        .catch((err) => console.log(err))
+        }
+    }) 
+
+//show all reviews for admin
+router.get('/admin/showreview', (req, res) =>{
+    Review.find(function (err, review) {
+        if (err || !review || review.length <= 0){
+            res.status(404).send(`not found`);
+        }
+        else {
+            let arr = review.map(function(e){ return{
+                    reviewID: e.reviewID,
+                    subject: e.subject,
+                    catalog_nbr: e.catalog_nbr,
+                    hidden: e.hidden,
+                    review: e.review,
+                    rating: e.rating}
+            })
+            res.send(arr);
+        }
+    })
+}) 
+
+//show all non hidden reviews to the user
+router.get('/auth/showreview/',(req, res) =>{
+    newarr = [];
+    Review.find(({"hidden": false}), function (err, review) {
+        if (err || !review ){
+            res.status(404).send(`not found`);
+        }
+        else {
+              let arr = review.map(function(e) {
+                newarr.push({
+                "reviewID": e.reviewID,
+                "subject": e.subject,
+                "catalog_nbr": e.catalog_nbr,
+                "review": e.review,
+                "rating": e.rating
+                  })
+              })
+              res.send(newarr);
+            }    
+    })           
+})
+
+//setting flag to hidden or clear hidden flag
+router.put('/admin/togglereview', (req, res)=>{
+    var err = validationResult(req);
+    if (!err.isEmpty()) {
+        console.log(err.mapped())
+        res.status(404).send(`Not valid input`);
+    } else {
+        Review.findOne(({"reviewID": "1"}), function (err, review) {
+            if (err || !review){ 
+                res.status(404).send(`Cant find the review`);
+            }
+            else{
+                if (review.hidden == true){ review.hidden = false;}
+                else{ review.hidden = true;}
+            console.log('updating review')
+            review.save()
+            .then((result) => res.send(result))
+            .catch((err) => console.log(err))
+            }
+        })
+    }
+})
+      
+
+
 
 
 //creates new schedule
@@ -180,7 +279,6 @@ router.delete('/schedule/del', (req, res) =>{
             .catch((err) => console.log(err) )
         }
     });
-   
 })
 
 //deletes schedules with a certain name
@@ -279,4 +377,4 @@ router.get('/:subject/:catalog_nbr/:ssr_component?', (req,res) =>{
 }
 )
 
-app.use('/api/courses', router)
+app.use('/api/', router)
