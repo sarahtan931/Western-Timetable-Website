@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const express = require('express');
 const app = express()
 const router = express.Router()
+const stringSimilarity = require('string-similarity');
 
 const {check , validationResult}  = require('express-validator');
 const e = require('express');
@@ -16,12 +17,8 @@ app.use(cors())
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
 var newdata=JSON.parse(data);
 
-var dataLab5 = fs.readFileSync('Lab5-subject-data.json', 'utf8');
-var lab5data = JSON.parse(data)
-
 //serving static files 
 app.use('/', express.static('static'))
-// configure the app to use bodyParser()
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -36,14 +33,21 @@ mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
 
 //creating schema for schedule
 const Schema = mongoose.Schema;
-const timetableSchema = new Schema({
-    name: {
-        type: String,
-    },
-    course: { type : Array , "default" : [] },
-    numCourses:{
-        type: Number,
-    }
+const timetables = new Schema({
+    owner: {type: String},
+    name: {type: String},
+    timetable: { type : Array , "default" : [] },
+    numCourses:{ type: Number},
+    description: {type: String},
+    date: {type: Date},
+    hidden: {type: Boolean}
+})
+
+const userSchema = new Schema({
+    name: {type: String},
+    email: {type: String},
+    password: {type:String},
+    activated: {type: Boolean}
 })
 
 const courseReviewSchema = new Schema({
@@ -56,8 +60,11 @@ const courseReviewSchema = new Schema({
   
 })
 
-const Timetable = mongoose.model('Timetable', timetableSchema)
+const Timetable = mongoose.model('Timetables', timetables)
 module.exports = Timetable;
+
+const User = mongoose.model('userSchema', userSchema)
+module.exports = User;
 
 const Review = mongoose.model('Review', courseReviewSchema)
 module.exports = Review;
@@ -86,12 +93,12 @@ router.get('/admin/showreview', (req, res) =>{
         }
         else {
             let arr = review.map(function(e){ return{
-                    reviewID: e.reviewID,
-                    subject: e.subject,
-                    catalog_nbr: e.catalog_nbr,
-                    hidden: e.hidden,
-                    review: e.review,
-                    rating: e.rating}
+                reviewID: e.reviewID,
+                subject: e.subject,
+                catalog_nbr: e.catalog_nbr,
+                hidden: e.hidden,
+                review: e.review,
+                rating: e.rating}
             })
             res.send(arr);
         }
@@ -142,27 +149,38 @@ router.put('/admin/togglereview', (req, res)=>{
         })
     }
 })
-      
-
-
-
 
 //creates new schedule
-router.post('/schedule/make/', [
-    check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
+router.post('/auth/makeschedule', [
+    check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
+    check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
     ], (req, res)=>{
     var err = validationResult(req);
     if (!err.isEmpty()) {
         console.log(err.mapped())
         res.status(404).send(`Not valid input`);
     } else {
-    name = req.body.name
-    Timetable.findOne(({"name": name}), function (err, timetable) {
+    let name = req.body.name;
+    let owner = req.body.owner;
+    let description = req.body.description;
+    Timetable.countDocuments({"owner": owner}, function(err, count){
+        console.log( "Number of course lists from ",owner, " ", count);
+        if (count > 20){
+            res.status(404).send(`User has 20 timetables`);
+        }
+    })
+    Timetable.findOne(({"name": name, "owner": owner}), function (err, timetable) {
         if (err || timetable){ 
             res.status(404).send(`Already Exists`);
         }
         else{
-        const timetable = new Timetable({ "name": name })
+        const timetable = new Timetable({ 
+            "owner": owner,
+            "name": name,
+            "description": description,
+            "date": new Date(),
+
+         })
         timetable.save()
         .then((result) => res.send(result))
         .catch((err) => console.log(err))
@@ -170,6 +188,41 @@ router.post('/schedule/make/', [
       }) 
     }  
 })
+
+
+
+//searching for a component
+router.get('/open/:subject/:catalog_nbr/', (req,res) =>{
+    let subject = req.params.subject;
+    let courseNum = req.params.catalog_nbr;
+    subject = subject.toUpperCase();
+    courseNum = courseNum.toUpperCase();
+
+    //making sure the course number is a valid size
+    if(courseNum.length < 4){
+        res.status(404).send(`Please send a valid course number`);
+    }
+    //if there is no component specified search for subject and coursenum
+    else if (newdata.find(p => p.subject.includes(subject) && p.catalog_nbr.includes(courseNum))){
+        const data = newdata.filter(p => p.subject.includes(subject) && p.catalog_nbr.includes(courseNum))
+        let arr = data.map(function(e){
+            return{
+                classname: e.className,
+                class_section: e.course_info[0].class_section,
+                ssr_component:e.course_info[0].ssr_component,
+                course_info: e.course_info[0],
+                catalog_nbr: e.catalog_nbr,
+                subject: e.subject
+            }
+        })
+        res.send(arr)
+    }
+    else{
+        res.status(404).send(`Subject id ${subject} was not found `);
+    }
+}
+)
+
 
 //updating schedule pairs
 router.put('/schedule/updatepairs/',[
@@ -340,41 +393,5 @@ router.get('/:subject', (req,res)=> {
     }
 })
 
-//searching for a component
-router.get('/:subject/:catalog_nbr/:ssr_component?', (req,res) =>{
-    const subject = req.params.subject;
-    const courseNum = req.params.catalog_nbr;
-    const component = req.params.ssr_component;
-
-    //if there is no component specified search for subject and coursenum
-    if (!component && newdata.find(p => p.subject === subject && p.catalog_nbr === courseNum)){
-        const data = newdata.filter(p => p.subject === subject && p.catalog_nbr === courseNum)
-        let arr = data.map(function(e){
-            return{
-                courseInfo: e.course_info,
-                catalog_nbr: e.catalog_nbr,
-                subject: e.subject
-            }
-        })
-        res.send(arr)
-    }
-    //if component specified seach through subject, coursenum and component
-    else if (newdata.find(p =>  p.subject === subject && p.catalog_nbr === courseNum && p.course_info[0].ssr_component === component)){
-    const data = newdata.filter(p => p.subject === subject && p.catalog_nbr === courseNum && p.course_info[0].ssr_component === component)
-    let arr = data.map(function(e){
-        return{
-            courseInfo: e.course_info,
-            catalog_nbr: e.catalog_nbr,
-            subject: e.subject
-        }
-      })
-    res.send(arr)
-    }   
-
-    else{
-        res.status(404).send(`Subject id ${subject} was not found `);
-    }
-}
-)
 
 app.use('/api/', router)
