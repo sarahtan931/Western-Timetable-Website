@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const express = require('express');
 const app = express()
+const passport = require('passport');
 const router = express.Router()
 const stringSimilarity = require('string-similarity');
 const {check , validationResult}  = require('express-validator');
 const e = require('express');
-var cors = require('cors')
-app.use(cors())
+const cors = require('cors')
 mongoose.set('useFindAndModify', false);
 
 //reading JSON file
@@ -17,10 +17,9 @@ var newdata=JSON.parse(data);
 
 //serving static files 
 app.use('/', express.static('static'))
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
+app.use(cors())
 
 //making connection to the database
 const port = process.env.PORT || 3000;
@@ -42,45 +41,58 @@ const timetables = new Schema({
     hidden: {type: Boolean}
 })
 
-const userSchema = new Schema({
-    name: {type: String},
-    email: {type: String},
-    password: {type:String},
-    activated: {type: Boolean}
-})
-
 const courseReviewSchema = new Schema({
     reviewID: {type: String},
+    name: {type: String},
     subject: {type: String},
     catalog_nbr: {type: String},
     hidden: {type: Boolean},
     review: {type: String},
-    rating: {type: Number}
-  
+    rating: {type: Number},
+    date: {type: Date}
 })
 
 const Timetable = mongoose.model('Timetables', timetables)
 module.exports = Timetable;
 
-const User = mongoose.model('userSchema', userSchema)
-module.exports = User;
-
 const Review = mongoose.model('Review', courseReviewSchema)
 module.exports = Review;
 
+//models and routes
+require('./models/model');
+require('./config/passport');
+app.use(require('./routes'));
+//const secureRoute = require('./routes/auth');
+//app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute);
+
+
+
 //create a review
 router.post('/auth/makereview/', (req, res)=>{
-    let data = req.body;
+    let subject = req.body.subject;
+    let catalog_nbr = req.body.catalog_nbr;
     var err = validationResult(req);
     if (!err.isEmpty()) {
         console.log(err.mapped())
         res.status(404).send(`Not valid input`);
     } else {
-        console.log(data)
-        const review = new Review(data)
+        if (newdata.find(p => p.subject == subject && p.catalog_nbr == catalog_nbr)){
+        const review = new Review({
+            "reviewID": req.body.reviewID,
+            "name": req.body.name,
+            "subject": req.body.subject,
+            "catalog_nbr": req.body.catalog_nbr,
+            "hidden": req.body.hidden,
+            "review": req.body.review,
+            "rating": req.body.rating,
+            "date": Date.now()
+        })
         review.save()
         .then((result) => res.send(result))
         .catch((err) => console.log(err))
+        }else{
+            res.status(404).send("Please enter a valid timetable input")
+        }
         }
     }) 
 
@@ -137,6 +149,7 @@ router.get('/admin/showreview', (req, res) =>{
         }
     })
 }) 
+
 
 //show all non hidden reviews to the user
 router.get('/auth/showreview/',(req, res) =>{
@@ -288,7 +301,8 @@ router.put('/auth/updateschedule', [
             }  
         })
 }) 
-        
+      
+/*
 //show schedules to owner
 router.get('/auth/showschedule/:owner',(req, res) =>{
     let newarr = []
@@ -311,7 +325,7 @@ router.get('/auth/showschedule/:owner',(req, res) =>{
             }    
     })           
 })
-
+*/
 //show all public schedules
 router.get('/open/showschedule/',(req, res) =>{
     let newarr = []
@@ -360,8 +374,7 @@ router.get('/open/allcourses',(req, res) => {
         return{
             subject: e.subject,
             className: e.className,
-            course_info: e.course_info[0]
-            
+            course_info: e.course_info[0]  
         }
     })
     res.send(arr)
@@ -376,6 +389,7 @@ router.get('/open/:subject/:catalog_nbr/', (req,res) =>{
     //converting it to uppercase to make the search case insensitive
     subject = subject.toUpperCase();
     courseNum = courseNum.toUpperCase();
+    let newarr = []
 
     //making sure the course number is a valid size
     if(courseNum.length < 4){
@@ -384,6 +398,16 @@ router.get('/open/:subject/:catalog_nbr/', (req,res) =>{
     //if there is no component specified search for subject and coursenum
     else if (newdata.find(p => p.subject.includes(subject) && p.catalog_nbr.includes(courseNum))){
         const data = newdata.filter(p => p.subject.includes(subject) && p.catalog_nbr.includes(courseNum))
+        Review.find(({"subject": subject,"catalog_nbr": courseNum, "hidden": false}), function (err, review) 
+        { review.map(function(e) {
+                newarr.push({
+                "name": e.name,
+                "date": e.date,
+                "review": e.review,
+                "rating": e.rating
+            })
+        }) 
+              
         let arr = data.map(function(e){
             return{
                 classname: e.className,
@@ -391,16 +415,19 @@ router.get('/open/:subject/:catalog_nbr/', (req,res) =>{
                 ssr_component:e.course_info[0].ssr_component,
                 course_info: e.course_info[0],
                 catalog_nbr: e.catalog_nbr,
-                subject: e.subject
+                subject: e.subject,
+                reviews: newarr
             }
-        })
+        }) 
         res.send(arr)
+        })  
     }
     else{
         res.status(404).send(`Subject id ${subject} was not found `);
     }
 }
 )
+
 
 
 //updating schedule pairs
