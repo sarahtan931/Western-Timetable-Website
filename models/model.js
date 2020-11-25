@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
-  name: String,
-  active: Boolean,
-  email: String,
-  hash: String,
-  salt: String,
-  type: String
+  name: {type: String},
+  active: {type: Boolean},
+  email: {type: String},
+  hash: {type: String},
+  salt: {type: String},
+  role: {type: String}
 });
 
 const timetables = new Schema({

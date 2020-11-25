@@ -16,26 +16,30 @@ const Review = mongoose.model('Review');
 router.post('/', auth.optional, (req, res, next) => {
   const { body: { user } } = req;
 
-  if(!user.email) {
-    return res.status(422).json({
-      errors: {
-        email: 'is required',
-      },
-    });
+/*Users.findOne(({"email": req.body.email}), function (err, user) {
+  if (err || user ){ 
+      res.status(404).send(`Already Exists`);
+  }
+})*/
+
+  if (!user.email) {
+    return res.status(422).json({errors: {email: 'is required',},});
   }
 
-  if(!user.password) {
-    return res.status(422).json({
-      errors: {
-        password: 'is required',
-      },
-    });
+  if(!user.password) {return res.status(422).json({ errors: {password: 'is required', },});
   }
-  const finalUser = new Users(user);
+  const finalUser = new Users({
+    "name": user.name,
+    "email": user.email,
+    "active": true
+  });
   finalUser.setPassword(user.password);
 
   return finalUser.save()
-    .then(() => res.json({ user: finalUser.toAuthJSON() }));
+    .then(() => 
+    //res.json({ user: finalUser.toAuthJSON() }));
+    res.send(finalUser))
+
 });
 
 //POST login route (optional, everyone has access)
