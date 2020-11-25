@@ -5,10 +5,36 @@ const jwt = require('jsonwebtoken');
 const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
+  name: String,
+  active: Boolean,
   email: String,
   hash: String,
   salt: String,
+  type: String
 });
+
+const timetables = new Schema({
+  owner: {type: String},
+  name: {type: String},
+  timetable: { type : Array , "default" : [] },
+  numCourses:{ type: Number},
+  description: {type: String},
+  date: {type: Date},
+  editdate: {type: Date},
+  hidden: {type: Boolean}
+})
+
+const courseReviewSchema = new Schema({
+  reviewID: {type: String},
+  name: {type: String},
+  subject: {type: String},
+  catalog_nbr: {type: String},
+  hidden: {type: Boolean},
+  review: {type: String},
+  rating: {type: Number},
+  date: {type: Date}
+})
+
 
 UsersSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
@@ -40,4 +66,10 @@ UsersSchema.methods.toAuthJSON = function() {
   };
 };
 
-mongoose.model('Users', UsersSchema);
+const Users = mongoose.model('Users', UsersSchema);
+const Timetable = mongoose.model('Timetables', timetables);
+const Review = mongoose.model('Review', courseReviewSchema);
+
+module.exports = Review;
+module.exports = Timetable;
+module.exports = Users;
