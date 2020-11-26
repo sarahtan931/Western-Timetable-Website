@@ -2,29 +2,42 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
 const auth = require('../auth');
-//const authUser = require('../auth')
 const {check , validationResult}  = require('express-validator');
-//const fs = require('fs');
-//var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
-//var newdata=JSON.parse(data);
+const { nextTick } = require('process');
 
 const Timetable = mongoose.model('Timetables');
 const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
+const ROLE = {
+    ADMIN: 'admin',
+    BASIC: 'basic'
+  }
 
-function authRole() {
-    return (req, res, next) => {
-        console.log(getUserFromHeaders)
-      if (req.user.role !== "ADMIN") {
-        res.status(401)
-        return res.send('Not allowed')
-      }
-      next()
-    }
+
+function userRole(req, res, next) {
+    const email = req.body.email;
+    //console.log(email)
+    if (email) {
+      Users.find(({"email": email}),function (err, user){
+        req.currentuser = user;
+        //console.log(req.currentuser)
+        if (err || !user || req.currentuser[0].role != "ADMIN"){
+            res.status(404).send(`you do not have these permissions`); 
+        } else{
+            next();
+        }
+    })
+}
 }
 
+const express = require('express')
+const app = express()
+app.use(userRole)
+
+
+
 //showing all users
-router.get('/showusers', auth.required, (req, res) =>{
+router.get('/showusers', auth.required, userRole, (req, res) =>{
     Users.find(function (err, user){
         if (err || !user){
             res.status(404).send(`not found`); 
