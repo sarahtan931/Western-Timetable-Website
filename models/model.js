@@ -46,12 +46,17 @@ UsersSchema.methods.validatePassword = function(password) {
   return this.hash === hash;
 };
 
+UsersSchema.methods.getEmail = function() {
+  return this.email 
+}
+
 UsersSchema.methods.generateJWT = function() {
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + 60);
 
   return jwt.sign({
+    role: this.role,
     email: this.email,
     id: this._id,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
@@ -62,7 +67,7 @@ UsersSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
     email: this.email,
-    token: this.generateJWT(),
+    token: this.generateJWT()
   };
 };
 

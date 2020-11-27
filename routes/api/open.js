@@ -4,71 +4,69 @@ const router = require('express').Router();
 const auth = require('../auth');
 const fs = require('fs');
 const stringSimilarity = require('string-similarity');
+const {check , validationResult}  = require('express-validator');
 
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
 var newdata=JSON.parse(data);
+
 
 const Users = mongoose.model('Users');
 const Timetable = mongoose.model('Timetables');
 const Review = mongoose.model('Review');
 
 //POST new user route (optional, everyone has access)
-router.post('/', auth.optional, (req, res, next) => {
+router.post('/register', [
+  check("email").normalizeEmail().isEmail()
+], auth.optional, (req, res, next) => {
   const { body: { user } } = req;
+  //const user = req.body;
 
-/*Users.findOne(({"email": req.body.email}), function (err, user) {
-  if (err || user ){ 
-      res.status(404).send(`Already Exists`);
-  }
-})*/
-
-  if (!user.email) {
-    return res.status(422).json({errors: {email: 'is required',},});
-  }
-
-  if(!user.password) {return res.status(422).json({ errors: {password: 'is required', },});
-  }
-  const finalUser = new Users({
-    "name": user.name,
-    "email": user.email,
-    "active": true
-  });
-  finalUser.setPassword(user.password);
-
-  return finalUser.save()
-    .then(() => 
-    //res.json({ user: finalUser.toAuthJSON() }));
-    res.send(finalUser))
-
+  Users.findOne(({"email": user.email}), function (err, exists) {
+    if (err || exists ){ 
+        return res.status(404).send(`Already Exists`);
+    }
+    if (!user.email) {
+      return res.status(422).send('Error')
+    }
+  
+    if(!user.password) {
+      return res.status(422).send('Error');
+    }
+    const finalUser = new Users({
+      "name": user.name,
+      "email": user.email,
+      "active": true,
+      "role": "BASIC"
+    });
+    finalUser.setPassword(user.password);
+    finalUser.save();
+    res.send(finalUser)
+  })
 });
 
-//POST login route (optional, everyone has access)
+router.get('/auth/facebook', passport.authenticate('facebook'));
+
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/',  failureRedirect: '/login' }));
+
 router.post('/login', auth.optional, (req, res, next) => {
-  const { body: { user } } = req;
+ const { body: { user } } = req;
   if(!user.email) {
-    return res.status(422).json({
-      errors: {
-        email: 'is required',
-      },
-    });
+    return res.status(404).send('Error');
   }
   if(!user.password) {
-    return res.status(422).json({
-      errors: {
-        password: 'is required',
-      },
-    });
+    return res.status(404).send('Error');
   }
 return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
     if(err) {
-      return next(err);
+     return res.status('404').send('Error')
     }
     if(passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
-      return res.json({ user: user.toAuthJSON() });
+      console.log(user.getEmail())
+      return res.send(user.toAuthJSON());
     }
-
     return status(400).info;
   })(req, res, next);
 });

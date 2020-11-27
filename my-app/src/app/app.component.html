@@ -6,13 +6,26 @@
     <title>MyApp</title>
   </head>
 <body>
-<h1>{{title}}</h1>
-<app-all-courses></app-all-courses>
-<app-course-codes></app-course-codes>
-<app-course-timetable></app-course-timetable>
-<app-show-sched></app-show-sched>
-<app-create-sched></app-create-sched>
-<app-delete-sched></app-delete-sched>
-<app-create-pairs></app-create-pairs>
-<app-show-pairs></app-show-pairs>
+<!-- nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="navbar-nav">
+      <a class="nav-item nav-link" routerLink="./login">Login</a>
+      <a class="nav-item nav-link" routerLink="./home">Home</a>
+
+  </div>
+</nav>
+
+<!-- main content container -->
+<div class="jumbotron">
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-8 offset-sm-2">
+              <router-outlet></router-outlet>
+              
+          </div>
+      </div>
+  </div>
+</div>
+
+
 </body>

@@ -12,7 +12,9 @@ import { ShowSchedComponent } from './components/show-sched/show-sched.component
 import { CreateSchedComponent } from './components/create-sched/create-sched.component';
 import { DeleteSchedComponent } from './components/delete-sched/delete-sched.component';
 import { CreatePairsComponent } from './components/create-pairs/create-pairs.component';
-import { ShowPairsComponent } from './components/show-pairs/show-pairs.component'
+import { ShowPairsComponent } from './components/show-pairs/show-pairs.component';
+import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { ShowPairsComponent } from './components/show-pairs/show-pairs.component
     CreateSchedComponent,
     DeleteSchedComponent,
     CreatePairsComponent,
-    ShowPairsComponent
+    ShowPairsComponent,
+    LoginComponent,
+    HomeComponent
   
   ],
   imports: [

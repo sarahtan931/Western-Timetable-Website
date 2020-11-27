@@ -1,11 +1,11 @@
 const jwt = require('express-jwt');
 
 const getTokenFromHeaders = (req) => {
-  const { headers: { authorization } } = req;
-  //console.log(req.body)
-
-  if(authorization && authorization.split(' ')[0] === 'Token') {
-    return authorization.split(' ')[1];
+  //const { headers: { authorization } } = req;
+  var authorization = req.headers['x-access-token'];
+  
+  if(authorization) {
+    return authorization;
   }
   return null;
 };
@@ -26,6 +26,5 @@ const auth = {
   }),
   
 };
-
 
 module.exports = auth;
