@@ -22,11 +22,12 @@ export class User{
     name: String;
     password: String;
     token: String;
+    role: String;
 }
 
 export class List{
     name: String;
     owner: String;
     date: Date;
-    timetable: [];
+    timetables: [];
 }

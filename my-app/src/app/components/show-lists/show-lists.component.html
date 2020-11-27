@@ -10,17 +10,15 @@
 
 <table>
     <tbody>
-        <tr *ngFor="let l of list">
+        <button (click)="showIDs()">ShowMore</button>
+        <tr *ngFor="let l of list;">
           <td>
           {{l?.name}}<Br>
           {{l?.owner}}<Br>
           {{l?.date}}<Br>
-          {{l?.courses}}<Br>
+          Number of courses: {{l?.courses}}<Br>
           {{l?.description}}<br>
-          <button>ShowMore</button>
-          <p class="expand">
           {{l?.timetables[0].classname}}
-          </p>
         </td> 
         </tr>
     </tbody>

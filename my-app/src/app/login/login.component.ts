@@ -24,7 +24,8 @@ export class LoginComponent implements OnInit {
     this.authService.login(f.value.email, f.value.password).subscribe({
       next: data => {
         console.log("Success");
-        this.router.navigateByUrl('/homeauth')
+        //this.router.navigateByUrl('/homeauth')
+        console.log(data)
       },
       error: error => {
         this.errorMessage = "Please enter valid login credentials"

@@ -10,6 +10,8 @@ import { HomeComponent } from './home/home.component';
 import { HomeauthComponent } from './homeauth/homeauth.component';
 import { SearchKeywordComponent } from './components/search-keyword/search-keyword.component';
 import { ShowListsComponent } from './components/show-lists/show-lists.component';
+import { SearchCourseComponent } from './components/search-course/search-course.component';
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { ShowListsComponent } from './components/show-lists/show-lists.component
     HomeComponent,
     HomeauthComponent,
     SearchKeywordComponent,
-    ShowListsComponent
+    ShowListsComponent,
+    SearchCourseComponent,
+    RegisterComponent
   
   ],
   imports: [

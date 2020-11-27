@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+
+<body>
+<div class="background3">
+ <div>Search Timetable by <strong>Subject and Course</strong> </div>
+ <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <input [(ngModel)]="subject" name="subject" placeholder='subject'>
+    <input [(ngModel)]="courseNum" name="courseNum" placeholder='coursenum'>
+    <button>Submit</button>
+  </form>
+  
+  <div class="err" ng-if="errorMessage">{{ errorMessage }}{{msg}}</div>
+
+<table>
+    <tbody>
+        <tr *ngFor="let c of course">
+          <td>
+          <Strong>
+            {{c?.catalog_nbr}}
+            {{c?.subject}}</Strong>
+            Class Section: {{c?.class_section}}
+            Component: {{c?.ssr_component}}
+            {{c?.reviews[0].review}}
+            <p *ngFor="let review of c?.reviews">
+            {{c?.reviews[review].review}}
+            </p>
+        </td> 
+        </tr>
+    </tbody>
+  </table>
+
+ </div>
+ </body>
+ 

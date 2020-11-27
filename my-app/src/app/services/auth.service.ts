@@ -32,6 +32,18 @@ login(email, password): Observable<User>{
   );
 }
 
+register(email, password): Observable<User>{
+  let link = `${this.url}/open/register/`
+  let body = {"user":{
+    'email': email,
+    'password': password},
+    'email': email
+  }
+  return this.http.post<User>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  );
+}
+
 private handleError(error: HttpErrorResponse) {
   if (error.error instanceof ErrorEvent) {
     console.error('An error occurred:', error.error.message);

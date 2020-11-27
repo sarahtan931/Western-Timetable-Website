@@ -38,6 +38,13 @@ getLists(): Observable <List[]>{
   return this.http.get<List[]>(link);
 }
 
+getCourseCode(subject: string, courseNum: string): Observable <CItem[]>{
+  let link = `${this.newurl}open/${subject}/${courseNum}`
+  return this.http.get<CItem[]>(link).pipe(
+    catchError(this.handleError)
+  )
+}
+
 //getting timetable input for course code and name
 getCourseTimetable1(subcode: string, subname: string): Observable<CTimetable[]>{
   let link = `${this.url}${subname}/${subcode}`

@@ -5,10 +5,9 @@ const auth = require('../auth');
 const fs = require('fs');
 const stringSimilarity = require('string-similarity');
 const {check , validationResult}  = require('express-validator');
-
+const jwt = require('jsonwebtoken');
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
 var newdata=JSON.parse(data);
-
 
 const Users = mongoose.model('Users');
 const Timetable = mongoose.model('Timetables');
@@ -19,8 +18,10 @@ router.post('/register', [
   check("email").normalizeEmail().isEmail()
 ], auth.optional, (req, res, next) => {
   const { body: { user } } = req;
-  //const user = req.body;
-
+  var err = validationResult(req);
+  if (!err.isEmpty()) {
+      res.status('404').send('please enter a valid email')
+  } else {
   Users.findOne(({"email": user.email}), function (err, exists) {
     if (err || exists ){ 
         return res.status(404).send(`Already Exists`);
@@ -42,6 +43,7 @@ router.post('/register', [
     finalUser.save();
     res.send(finalUser)
   })
+}
 });
 
 router.get('/auth/facebook', passport.authenticate('facebook'));
@@ -65,7 +67,6 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
     if(passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
-      console.log(user.getEmail())
       return res.send(user.toAuthJSON());
     }
     return status(400).info;
@@ -135,18 +136,18 @@ router.get('/showschedule/',(req, res) =>{
         }
         else {
             timetable.map(function(e) {
-                 newarr.push({
-                    "owner": e.owner,
-                    "name": e.name,
-                    "description": e.description,
-                    "date": e.date,
-                    "courses": e.timetable.length,
-                    "timetables": e.timetable
-                  })
-              })
-              const sorted = newarr.sort((a, b) => b.date - a.date) 
-              sorted.slice(0, 10);
-              res.send(sorted);
+              newarr.push({
+                "owner": e.owner,
+                "name": e.name,
+                "description": e.description,
+                "date": e.date,
+                "courses": e.timetable.length,
+                "timetables": e.timetable
+                })
+            })
+            const sorted = newarr.sort((a, b) => b.date - a.date) 
+            sorted.slice(0, 10);
+            res.send(sorted);
             }    
     })           
 })
@@ -180,11 +181,11 @@ router.get('/:subject/:catalog_nbr/', (req,res) =>{
         const data = newdata.filter(p => p.subject.includes(subject) && p.catalog_nbr.includes(courseNum))
         Review.find(({"subject": subject,"catalog_nbr": courseNum, "hidden": false}), function (err, review) 
         { review.map(function(e) {
-                newarr.push({
-                "name": e.name,
-                "date": e.date,
-                "review": e.review,
-                "rating": e.rating
+              newarr.push({
+              "name": e.name,
+              "date": e.date,
+              "review": e.review,
+              "rating": e.rating
             })
         }) 
               

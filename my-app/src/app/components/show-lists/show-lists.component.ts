@@ -16,7 +16,19 @@ export class ShowListsComponent implements OnInit {
   }
 
   showLists(){
-    this.courseServices.getLists().subscribe(l=> this.list = l)
+    this.courseServices.getLists().subscribe(
+      l => this.list = l
+    )
   }
 
-}
+  showIDs(){
+    console.log('functiona')
+    console.log(this.list)
+    console.log(this.list[0].owner)
+
+  }
+ 
+
+  }
+
+
