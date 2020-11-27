@@ -15,6 +15,7 @@ import { CreatePairsComponent } from './components/create-pairs/create-pairs.com
 import { ShowPairsComponent } from './components/show-pairs/show-pairs.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
+import { HomeauthComponent } from './homeauth/homeauth.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { HomeComponent } from './home/home.component';
     CreatePairsComponent,
     ShowPairsComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    HomeauthComponent
   
   ],
   imports: [

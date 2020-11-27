@@ -32,6 +32,7 @@ getCourseCodes(value: string): Observable <CItem[]>{
   );
 }
 
+
 //getting timetable input for course code and name
 getCourseTimetable1(subcode: string, subname: string): Observable<CTimetable[]>{
   let link = `${this.url}${subname}/${subcode}`

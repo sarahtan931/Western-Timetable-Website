@@ -51,6 +51,7 @@ router.get('/auth/facebook/callback',
 
 router.post('/login', auth.optional, (req, res, next) => {
  const { body: { user } } = req;
+ //const user = req.body
   if(!user.email) {
     return res.status(404).send('Error');
   }

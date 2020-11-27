@@ -1,1 +1,16 @@
 <p>login works!</p>
+
+<form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <div class="container">
+      <label for="email"><b>Username</b></label>
+      <input [(ngModel)]="email" name='email' type="text" placeholder="Enter Email" required>
+  
+      <label for="password"><b>Password</b></label>
+      <input [(ngModel)]="password" name="password" type="password" placeholder="Enter Password"required>
+  
+      <button>Login</button>
+      <div class="err" ng-if="errorMessage">{{ errorMessage }}</div>
+    </div>
+  </form>
+
+ 

@@ -16,3 +16,10 @@ export class CTimetable{
 export class Schedule{
     name: String;
 }
+
+export class User{
+    email: String;
+    name: String;
+    password: String;
+    token: String;
+}
