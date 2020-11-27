@@ -4,15 +4,14 @@ import { CoursesService } from '../../services/courses.service';
 import {NgForm} from '@angular/forms';
 
 
-
 @Component({
-  selector: 'app-course-codes',
-  templateUrl: './course-codes.component.html',
-  styleUrls: ['./course-codes.component.css']
+  selector: 'app-search-keyword',
+  templateUrl: './search-keyword.component.html',
+  styleUrls: ['./search-keyword.component.css']
 })
-export class CourseCodesComponent implements OnInit {
+export class SearchKeywordComponent implements OnInit {
   @Input() course:CItem[];
-  subcode: string;
+  keyword: string;
   errorMessage: string;
   msg: string;
 
@@ -25,7 +24,7 @@ export class CourseCodesComponent implements OnInit {
     this.course = [];
     this.msg = "";
 
-    this.courseService.getCourseCodes(f.value.subcode).subscribe({
+    this.courseService.getKeyword(f.value.keyword).subscribe({
       next: data => {
         this.course = data
         console.log(data)
@@ -38,15 +37,4 @@ export class CourseCodesComponent implements OnInit {
     })
   }
 
-  getColor(color: string): string{
-    if (color == 'LEC'){
-      return "#e6ffff"
-    }
-    if (color == 'TUT'){
-      return "#ffe6ff"
-    }
-    else{
-      return "#ffeee6"
-    }
-  }
 }

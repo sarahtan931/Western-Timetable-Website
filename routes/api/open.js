@@ -129,17 +129,19 @@ router.get('/showreview/',(req, res) =>{
 
 router.get('/showschedule/',(req, res) =>{
     let newarr = []
-    Timetable.find(({"hidden": false}), function (err, review) {
-        if (err || !review ){
+    Timetable.find(({"hidden": false}), function (err, timetable) {
+        if (err || !timetable){
             res.status(404).send(`not found`);
         }
         else {
-            review.map(function(e) {
+            timetable.map(function(e) {
                  newarr.push({
                     "owner": e.owner,
                     "name": e.name,
                     "description": e.description,
                     "date": e.date,
+                    "courses": e.timetable.length,
+                    "timetables": e.timetable
                   })
               })
               const sorted = newarr.sort((a, b) => b.date - a.date) 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+
+<body>
+<div class="background2">
+  <div>Search Timetable by Keyword</div>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <input [(ngModel)]="keyword" name="keyword">
+        <button>Submit</button>
+      </form>
+
+<div class="err" ng-if="errorMessage">{{ errorMessage }}{{msg}}</div>
+
+<table>
+  <tbody>
+      <tr *ngFor="let c of course">
+        <td>
+        <Strong>{{c?.catalog_nbr}}
+        {{c?.subject}}</Strong>
+      </td> 
+      </tr>
+  </tbody>
+</table>
+</div>
+</body>

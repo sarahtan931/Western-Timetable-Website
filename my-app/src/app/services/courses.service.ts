@@ -1,6 +1,6 @@
 import { Injectable, ErrorHandler} from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Course, CTimetable, CItem, Schedule} from '../Models/Course';
+import { Course, CTimetable, CItem, Schedule, List} from '../Models/Course';
 import { Observable, throwError } from 'rxjs';
 import {catchError} from 'rxjs/operators'; 
 
@@ -9,6 +9,7 @@ import {catchError} from 'rxjs/operators';
 })
 export class CoursesService {
    url:string = `http://${window.location.hostname}:3000/api/courses/`
+   newurl:string = `http://${window.location.hostname}:3000/api/`
   
 
   constructor(private http:HttpClient) {}
@@ -24,14 +25,18 @@ getCourses(): Observable <Course[]>{
   return this.http.get<Course[]>(this.url);
     }
 
-//getting the timetables for course codes
-getCourseCodes(value: string): Observable <CItem[]>{
-  let link = `${this.url}${value}`
+getKeyword(keyword: string): Observable <CItem[]>{
+  let link = `${this.newurl}/open/searchkeyword/${keyword}`
   return this.http.get<CItem[]>(link).pipe(
     catchError(this.handleError)
-  );
+  )
 }
 
+getLists(): Observable <List[]>{
+  let link = `${this.newurl}open/showschedule`
+  console.log(link)
+  return this.http.get<List[]>(link);
+}
 
 //getting timetable input for course code and name
 getCourseTimetable1(subcode: string, subname: string): Observable<CTimetable[]>{

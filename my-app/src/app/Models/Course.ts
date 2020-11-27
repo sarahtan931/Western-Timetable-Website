@@ -23,3 +23,10 @@ export class User{
     password: String;
     token: String;
 }
+
+export class List{
+    name: String;
+    owner: String;
+    date: Date;
+    timetable: [];
+}
