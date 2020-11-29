@@ -7,18 +7,22 @@
 <div class="background2">
   <div>Course Lists</div>
 <button (click)="showLists()">Show Course Lists</button>
+<button (click)="toggleShow()">Expand Course Lists</button>
 
-        <div *ngFor="let l of list;">
+
+        <div class='all' *ngFor="let l of list;">
           {{l?.name}}<Br>
           {{l?.owner}}<Br>
           {{l?.date}}<Br>
           Number of courses: {{l?.courses}}<Br>
-          {{l?.description}}<br>
-       
-        <div *ngFor= "let t of l.timetables">
-          {{t?.classname}}
+
+          <div class='more' *ngIf="isShown">
+          Description: {{l?.description}}<br>
+        <div class='course' *ngFor= "let t of l.timetables">
+          {{t.catalog_nbr}} {{t?.classname}} 
         </div>
       </div>
+    </div>
 
 </div>
 </body>

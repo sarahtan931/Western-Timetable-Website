@@ -12,16 +12,23 @@
    
 }
 
-table, th, td {
-    border: 1px solid black;
-    width: 100%;
-}
-
-tbody:empty {
-    display: none;
- }
 
 .err{
     background-color: rgb(255, 188, 198);
     text-align: center;
 }
+
+.more{
+    background-color: rgb(253, 221, 226);
+    border:  solid black;
+}
+
+.course{
+    background-color: powderblue;
+    border:  solid black;
+}
+
+.all{
+    border:  solid black;
+}
+

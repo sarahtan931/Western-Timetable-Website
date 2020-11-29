@@ -23,15 +23,15 @@
       
     <div *ngIf="isShown">
       <div class='more'>
-        {{c?.descrlong}}
-        {{c?.start_time}}
+        {{c?.descrlong}} <br>
+       Time:  {{c?.start_time}}
         {{c?.end_time}}
       </div>
     <div class='review' *ngFor="let c of course; let r of c.reviews">
-        {{ r.review }} 
-        {{ r.rating }}
-        {{ r.name }}
-        {{ r.date }}
+        Review: {{ r.review }} <br>
+        Rating:  {{ r.rating }} <br>
+       Creater:  {{ r.name }} <br>
+        Date: {{ r.date }}
     </div>
     
   </div>

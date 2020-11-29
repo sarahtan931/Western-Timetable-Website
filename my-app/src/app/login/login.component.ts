@@ -9,7 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  @Input() errorMessage: String;
+  @Input() 
+  errorMessage: String;
   email: String;
   password: String;
 
@@ -24,11 +25,18 @@ export class LoginComponent implements OnInit {
     this.authService.login(f.value.email, f.value.password).subscribe({
       next: data => {
         console.log("Success");
-        this.router.navigateByUrl('/homeauth')
-        console.log(data)
+        //this.router.navigateByUrl('/homeauth')
+        if (data.role == 'BASIC'){
+          console.log('basic user')
+          this.router.navigateByUrl('/homeauth')
+        }
+        else{
+          console.log('Authenticated User')
+          this.router.navigateByUrl('/homeadmin')
+        }
       },
       error: error => {
-        console.log(error.message)
+        console.log(error.Message)
         this.errorMessage = "Please enter valid login credentials"
         console.log("Error")
       }

@@ -22,7 +22,7 @@ export class AuthService {
 
 //creating a schedule
 login(email, password): Observable<User>{
-  let link = `${this.url}/open/login/`
+  let link = `${this.url}open/login/`
   let body = {"user":{
     'email': email,
     'password': password}
@@ -32,8 +32,16 @@ login(email, password): Observable<User>{
   );
 }
 
+logout(): Observable<User>{
+  let link = `${this.url}open/logout`
+  return this.http.get<User>(link).pipe(
+    catchError(this.handleError)
+  );
+}
+
+
 register(email, password): Observable<User>{
-  let link = `${this.url}/open/register/`
+  let link = `${this.url}open/register/`
   let body = {"user":{
     'email': email,
     'password': password},

@@ -10,6 +10,8 @@ import { List } from '../../Models/Course';
 export class ShowListsComponent implements OnInit {
   @Input() list: List[];
   timetables: Array<any>;
+  isShown: boolean = false ;
+  
 
   constructor(private courseServices: CoursesService) { }
 
@@ -17,18 +19,16 @@ export class ShowListsComponent implements OnInit {
   }
 
   showLists(){
+    this.isShown = false;
     this.courseServices.getLists().subscribe(
       l => this.list = l
     )
    
   }
 
-  showIDs(){
-    console.log('functiona')
-    console.log(this.list)
-    console.log(this.list[0].owner)
-
-  }
+  toggleShow() {
+    this.isShown = ! this.isShown;
+    }
  
 
   }

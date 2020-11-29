@@ -13,6 +13,7 @@ import { ShowListsComponent } from './components/show-lists/show-lists.component
 import { SearchCourseComponent } from './components/search-course/search-course.component';
 import { RegisterComponent } from './register/register.component';
 import { ShowTimetableComponent } from './components/show-timetable/show-timetable.component';
+import { HomeadminComponent } from './homeadmin/homeadmin.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ShowTimetableComponent } from './components/show-timetable/show-timetab
     ShowListsComponent,
     SearchCourseComponent,
     RegisterComponent,
-    ShowTimetableComponent
+    ShowTimetableComponent,
+    HomeadminComponent
   
   ],
   imports: [

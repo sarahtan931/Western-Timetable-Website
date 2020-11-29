@@ -46,18 +46,19 @@ router.post('/register', [
 }
 });
 
+/*
 router.get('/auth/facebook', passport.authenticate('facebook'));
 
 router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/',  failureRedirect: '/login' }));
+  passport.authenticate('facebook', { successRedirect: '/',  failureRedirect: '/login' }));*/
 
 router.post('/login', auth.optional, (req, res, next) => {
  const { body: { user } } = req;
   if(!user.email) {
-    return res.status(404).send('Error');
+    return res.status(404).send('No email');
   }
   if(!user.password) {
-    return res.status(404).send('Error');
+    return res.status(404).send('no password');
   }
 return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
     if(err) {
@@ -67,13 +68,17 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
       return res.status('404').send(new Error('MEssage 2'))
     }
     if(passportUser) {
-      //console.log(passportUser)
       const user = passportUser;
       user.token = passportUser.generateJWT();
       return res.send(user.toAuthJSON());
     }
     return status(400).info;
   })(req, res, next);
+});
+
+router.get('/logout', function(req, res){
+    req.logout();
+   return res.send('succesfully logged out')
 });
 
 //search by keyword softmatch
@@ -199,14 +204,14 @@ router.get('/allcourses',(req, res) => {
     res.send(arr)  
 })
 
-router.get('/:subject/:catalog_nbr/', (req,res) =>{
+router.get('/findbyboth/:subject/:catalog_nbr/', (req,res) =>{
     let subject = req.params.subject;
     let courseNum = req.params.catalog_nbr;
     //converting it to uppercase to make the search case insensitive
     subject = subject.toUpperCase().toString();
     courseNum = courseNum.toUpperCase().toString();
     let newarr = []
-
+  
     //making sure the course number is a valid size
     if(courseNum.length < 4){
         res.status(404).send(`Please send a valid course number`);
@@ -222,8 +227,7 @@ router.get('/:subject/:catalog_nbr/', (req,res) =>{
               "review": e.review,
               "rating": e.rating
             })
-        }) 
-              
+        })   
         let arr = data.map(function(e){
             return{
                 classname: e.className,
@@ -235,19 +239,9 @@ router.get('/:subject/:catalog_nbr/', (req,res) =>{
                 reviews: newarr,
                 start_time: e.course_info[0].start_time,
                 end_time: e.course_info[0].end_time,
-                descrlong: e.course_info[0].descrlong
-
-      /*
-              'catalog_nbr': list.timetable[i].catalog_nbr,
-              'subject': list.timetable[i].subject,
-              'class_section': list.timetable[i].class_section,
-              'ssr_component': list.timetable[i].ssr_component,
-              'descrlong': list.timetable[i].descrlong,
-              'class_section': list.timetable[i].class_section,
-              'start_time': list.timetable[i].start_time,
-              'end_time': list.timetable[i].end_time,
-              'campus': list.timetable[i].campus,
-              'days': list.timetable[i].days*/
+                descrlong: e.course_info[0].descrlong,
+                campus: e.course_info[0].campus,
+                days : e.course_info[0].days
             }
         }) 
         res.send(arr)
@@ -256,6 +250,96 @@ router.get('/:subject/:catalog_nbr/', (req,res) =>{
     else{
         res.status(404).send(`Subject id ${subject} was not found `);
     }
+}
+)
+
+router.get('/findbysubject/:subject', (req,res) =>{
+  let subject = req.params.subject;
+  //converting it to uppercase to make the search case insensitive
+  subject = subject.toUpperCase().toString();
+  let newarr = []
+
+  //if there is no component specified search for subject and coursenum
+  if (newdata.find(p => p.subject.includes(subject))){
+      const data = newdata.filter(p => p.subject.includes(subject))
+      Review.find(({"subject": subject, "hidden": false}), function (err, review) 
+      { review.map(function(e) {
+            newarr.push({
+            "name": e.name,
+            "date": e.date,
+            "review": e.review,
+            "rating": e.rating
+          })
+      })   
+      let arr = data.map(function(e){
+          return{
+              classname: e.className,
+              class_section: e.course_info[0].class_section,
+              ssr_component:e.course_info[0].ssr_component,
+              course_info: e.course_info[0],
+              catalog_nbr: e.catalog_nbr,
+              subject: e.subject,
+              reviews: newarr,
+              start_time: e.course_info[0].start_time,
+              end_time: e.course_info[0].end_time,
+              descrlong: e.course_info[0].descrlong,
+              campus: e.course_info[0].campus,
+              days : e.course_info[0].days
+          }
+      }) 
+      res.send(arr)
+      })  
+  }
+  else{
+      res.status(404).send(`Subject id ${subject} was not found `);
+  }
+}
+)
+
+router.get('/findbynum/:catalog_nbr/', (req,res) =>{
+  let courseNum = req.params.catalog_nbr;
+  //converting it to uppercase to make the search case insensitive
+  courseNum = courseNum.toUpperCase().toString();
+  let newarr = []
+
+  //making sure the course number is a valid size
+  if(courseNum.length < 4){
+      res.status(404).send(`Please send a valid course number`);
+  }
+  //if there is no component specified search for subject and coursenum
+  else if (newdata.find(p => p.catalog_nbr.toString().includes(courseNum))){
+      const data = newdata.filter(p => p.catalog_nbr.toString().includes(courseNum))
+      Review.find(({"catalog_nbr": courseNum, "hidden": false}), function (err, review) 
+      { review.map(function(e) {
+            newarr.push({
+            "name": e.name,
+            "date": e.date,
+            "review": e.review,
+            "rating": e.rating
+          })
+      })   
+      let arr = data.map(function(e){
+          return{
+              classname: e.className,
+              class_section: e.course_info[0].class_section,
+              ssr_component:e.course_info[0].ssr_component,
+              course_info: e.course_info[0],
+              catalog_nbr: e.catalog_nbr,
+              subject: e.subject,
+              reviews: newarr,
+              start_time: e.course_info[0].start_time,
+              end_time: e.course_info[0].end_time,
+              descrlong: e.course_info[0].descrlong,
+              campus: e.course_info[0].campus,
+              days : e.course_info[0].days
+          }
+      }) 
+      res.send(arr)
+      })  
+  }
+  else{
+      res.status(404).send(`Subject id ${subject} was not found `);
+  }
 }
 )
 

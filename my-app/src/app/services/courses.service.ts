@@ -39,11 +39,26 @@ getLists(): Observable <List[]>{
 }
 
 getCourseCode(subject: string, courseNum: string): Observable <CItem[]>{
-  let link = `${this.newurl}open/${subject}/${courseNum}`
+  let link = `${this.newurl}open/findbyboth/${subject}/${courseNum}`
   return this.http.get<CItem[]>(link).pipe(
     catchError(this.handleError)
   )
 }
+
+getCourseSubject(subject: string): Observable<CItem[]>{
+  let link = `${this.newurl}open/findbysubject/${subject}/`
+  return this.http.get<CItem[]>(link).pipe(
+    catchError(this.handleError)
+  )
+}
+
+getCourseNum(courseNum: string): Observable<CItem[]>{
+  let link = `${this.newurl}open/findbynum/${courseNum}/`
+  return this.http.get<CItem[]>(link).pipe(
+    catchError(this.handleError)
+  )
+}
+
 
 showTimetable(name: string): Observable<Schedule[]>{
   let link = `${this.newurl}open/schedule/find/${name}`

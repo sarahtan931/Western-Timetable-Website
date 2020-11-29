@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { HomeauthComponent} from './homeauth/homeauth.component';
 import { RegisterComponent } from './register/register.component';
+import { HomeadminComponent} from './homeadmin/homeadmin.component';
 
 
 const routes: Routes = [
@@ -12,9 +13,10 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'homeauth', component: HomeauthComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'homeadmin', component: HomeadminComponent},
   
   //otherwise re
-  {path: '**', redirectTo:''}
+  {path: '**', redirectTo:'home'}
 ];
 
 @NgModule({
