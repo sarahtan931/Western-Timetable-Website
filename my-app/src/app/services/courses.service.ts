@@ -45,18 +45,9 @@ getCourseCode(subject: string, courseNum: string): Observable <CItem[]>{
   )
 }
 
-//getting timetable input for course code and name
-getCourseTimetable1(subcode: string, subname: string): Observable<CTimetable[]>{
-  let link = `${this.url}${subname}/${subcode}`
-  return this.http.get<CTimetable[]>(link).pipe(
-    catchError(this.handleError)
-  );
-}
-
-//getting timetable input for course code, name and type
-getCourseTimetable2(subcode: string, subname: string, type: string): Observable<CTimetable[]>{
-  let link = `${this.url}${subname}/${subcode}/${type}`
-  return this.http.get<CTimetable[]>(link).pipe(
+showTimetable(name: string): Observable<Schedule[]>{
+  let link = `${this.newurl}open/schedule/find/${name}`
+  return this.http.get<Schedule[]>(link).pipe(
     catchError(this.handleError)
   );
 }

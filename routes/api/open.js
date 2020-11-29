@@ -53,7 +53,6 @@ router.get('/auth/facebook/callback',
 
 router.post('/login', auth.optional, (req, res, next) => {
  const { body: { user } } = req;
- //const user = req.body
   if(!user.email) {
     return res.status(404).send('Error');
   }
@@ -64,7 +63,11 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
     if(err) {
      return res.status('404').send('Error')
     }
+    if(passportUser.active == false){
+      return res.status('404').send(new Error('MEssage 2'))
+    }
     if(passportUser) {
+      //console.log(passportUser)
       const user = passportUser;
       user.token = passportUser.generateJWT();
       return res.send(user.toAuthJSON());
@@ -75,81 +78,113 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
 
 //search by keyword softmatch
 router.get('/searchkeyword/:keyword', (req, res) => {
-    keyword = req.params.keyword;
-    keyword = keyword.replace(/\s/g, '');
-    keyword = keyword.toString().toUpperCase();
-        if (keyword.length > 4 && (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5))){
-            const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5)
-            let arr = data.map(function(e){
-                return{
-                    catalog_nbr: e.catalog_nbr,
-                    subject: e.subject
-                }
-            })
-            res.send(arr)
+  keyword = req.params.keyword;
+  keyword = keyword.replace(/\s/g, '');
+  keyword = keyword.toString().toUpperCase();
+    if (keyword.length > 4 && (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5))){
+      const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5)
+      let arr = data.map(function(e){
+        return{
+          catalog_nbr: e.catalog_nbr,
+          subject: e.subject
         }
-        else if (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.catalog_nbr.toString()) > .8)) {
-           {
-                const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.catalog_nbr.toString()) > .8)
-                let arr = data.map(function(e){
-                    return{
-                        catalog_nbr: e.catalog_nbr,
-                        subject: e.subject
-                    }
-                })
-                res.send(arr)
-            }
+      })
+      res.send(arr)
+      }
+      else if (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.catalog_nbr.toString()) > .8)) {
+        {
+        const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.catalog_nbr.toString()) > .8)
+        let arr = data.map(function(e){
+        return{
+          catalog_nbr: e.catalog_nbr,
+          subject: e.subject
         }
-        else{   
-            res.status(404).send(`not found`);
+        })
+        res.send(arr)
         }
-   
+      }
+      else{   
+        res.status(404).send(`not found`);
+    }  
 })
 
 //showing all reviews
 router.get('/showreview/',(req, res) =>{
-    newarr = [];
-    Review.find(({"hidden": false}), function (err, review) {
-        if (err || !review ){
-            res.status(404).send(`not found`);
-        }
-        else {
-              let arr = review.map(function(e) {
-                newarr.push({
-                "reviewID": e.reviewID,
-                "subject": e.subject,
-                "catalog_nbr": e.catalog_nbr,
-                "review": e.review,
-                "rating": e.rating
-                  })
-              })
-              res.send(newarr);
-            }    
+  newarr = [];
+  Review.find(({"hidden": false}), function (err, review) {
+    if (err || !review ){
+      res.status(404).send(`not found`);
+    }
+    else {
+      let arr = review.map(function(e) {
+        newarr.push({
+        "reviewID": e.reviewID,
+        "subject": e.subject,
+        "catalog_nbr": e.catalog_nbr,
+        "review": e.review,
+        "rating": e.rating
+        })
+      })
+       res.send(newarr);
+      }    
     })           
 })
 
+//shows all the lists
 router.get('/showschedule/',(req, res) =>{
-    let newarr = []
-    Timetable.find(({"hidden": false}), function (err, timetable) {
-        if (err || !timetable){
-            res.status(404).send(`not found`);
-        }
-        else {
-            timetable.map(function(e) {
+  let newarr = []
+  Timetable.find(({"hidden": false}), function (err, timetable) {
+    if (err || !timetable){
+      res.status(404).send(`not found`);
+    }
+    else {
+      timetable.map(function(e) {
+        newarr.push({
+          "owner": e.owner,
+          "name": e.name,
+          "description": e.description,
+          "date": e.date,
+          "courses": e.timetable.length,
+          "timetables": e.timetable
+        })
+      })
+      const sorted = newarr.sort((a, b) => b.date - a.date) 
+      sorted.slice(0, 10);
+      res.send(sorted);
+      }    
+  })           
+})
+
+//search for a schedule and find the timetable
+router.get('/schedule/find/:sched',(req, res) =>{
+  name = req.params.sched
+  let newarr = []
+
+Timetable.findOne(({"name": name, "hidden":false}), function (err, list) {
+  if (err || !list || list.length <= 0 || list.timetable.length <= 0){
+      res.status(404).send(`not found`);
+  }
+  else {
+    console.log(list)
+    for (i = 0; i < list.timetable.length; i++){
               newarr.push({
-                "owner": e.owner,
-                "name": e.name,
-                "description": e.description,
-                "date": e.date,
-                "courses": e.timetable.length,
-                "timetables": e.timetable
-                })
-            })
-            const sorted = newarr.sort((a, b) => b.date - a.date) 
-            sorted.slice(0, 10);
-            res.send(sorted);
-            }    
-    })           
+              'classname': list.timetable[i].classname,
+              'catalog_nbr': list.timetable[i].catalog_nbr,
+              'subject': list.timetable[i].subject,
+              'class_section': list.timetable[i].class_section,
+              'ssr_component': list.timetable[i].ssr_component,
+              'descrlong': list.timetable[i].descrlong,
+              'class_section': list.timetable[i].class_section,
+              'start_time': list.timetable[i].start_time,
+              'end_time': list.timetable[i].end_time,
+              'campus': list.timetable[i].campus,
+              'days': list.timetable[i].days
+              });
+          }
+      res.send(newarr);
+          
+    }
+    })  
 })
 
 router.get('/allcourses',(req, res) => {
@@ -168,8 +203,8 @@ router.get('/:subject/:catalog_nbr/', (req,res) =>{
     let subject = req.params.subject;
     let courseNum = req.params.catalog_nbr;
     //converting it to uppercase to make the search case insensitive
-    subject = subject.toUpperCase();
-    courseNum = courseNum.toUpperCase();
+    subject = subject.toUpperCase().toString();
+    courseNum = courseNum.toUpperCase().toString();
     let newarr = []
 
     //making sure the course number is a valid size
@@ -177,8 +212,8 @@ router.get('/:subject/:catalog_nbr/', (req,res) =>{
         res.status(404).send(`Please send a valid course number`);
     }
     //if there is no component specified search for subject and coursenum
-    else if (newdata.find(p => p.subject.includes(subject) && p.catalog_nbr.includes(courseNum))){
-        const data = newdata.filter(p => p.subject.includes(subject) && p.catalog_nbr.includes(courseNum))
+    else if (newdata.find(p => p.subject.includes(subject) &&  p.catalog_nbr.toString().includes(courseNum))){
+        const data = newdata.filter(p => p.subject.includes(subject) &&  p.catalog_nbr.toString().includes(courseNum))
         Review.find(({"subject": subject,"catalog_nbr": courseNum, "hidden": false}), function (err, review) 
         { review.map(function(e) {
               newarr.push({
@@ -197,7 +232,22 @@ router.get('/:subject/:catalog_nbr/', (req,res) =>{
                 course_info: e.course_info[0],
                 catalog_nbr: e.catalog_nbr,
                 subject: e.subject,
-                reviews: newarr
+                reviews: newarr,
+                start_time: e.course_info[0].start_time,
+                end_time: e.course_info[0].end_time,
+                descrlong: e.course_info[0].descrlong
+
+      /*
+              'catalog_nbr': list.timetable[i].catalog_nbr,
+              'subject': list.timetable[i].subject,
+              'class_section': list.timetable[i].class_section,
+              'ssr_component': list.timetable[i].ssr_component,
+              'descrlong': list.timetable[i].descrlong,
+              'class_section': list.timetable[i].class_section,
+              'start_time': list.timetable[i].start_time,
+              'end_time': list.timetable[i].end_time,
+              'campus': list.timetable[i].campus,
+              'days': list.timetable[i].days*/
             }
         }) 
         res.send(arr)

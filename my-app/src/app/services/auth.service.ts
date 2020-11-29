@@ -52,7 +52,7 @@ private handleError(error: HttpErrorResponse) {
       `Backend returned code ${error.status}, ` +
       `body was: ${error.error}`);
   }
-  return throwError(
-    'Error.');
+  console.log(error.error.message)
+  return throwError(error.message);
 }
 }

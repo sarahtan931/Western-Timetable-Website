@@ -5,6 +5,9 @@ export class Course{
 
 export class CItem{
     catalogue_nbr: String;
+    subject: String;
+    courseNum: String;
+    reviews: Array<any>;
 }
 
 export class CTimetable{
@@ -29,5 +32,5 @@ export class List{
     name: String;
     owner: String;
     date: Date;
-    timetables: [];
+    timetables: Array<any>;
 }

@@ -6,6 +6,22 @@
     width: 400px;
     height: 300px; 
     left: 0%;
-    top: 30%;
-   
+    top: 30%; 
+}
+
+table td{
+    border:1px solid #FF0000;
+    }
+
+.course{
+    background-color: aliceblue;
+    border:  solid black;
+}
+
+.review{
+    background-color: antiquewhite;
+}
+
+.more{
+    background-color: cornflowerblue;
 }

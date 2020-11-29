@@ -8,21 +8,17 @@
   <div>Course Lists</div>
 <button (click)="showLists()">Show Course Lists</button>
 
-<table>
-    <tbody>
-        <button (click)="showIDs()">ShowMore</button>
-        <tr *ngFor="let l of list;">
-          <td>
+        <div *ngFor="let l of list;">
           {{l?.name}}<Br>
           {{l?.owner}}<Br>
           {{l?.date}}<Br>
           Number of courses: {{l?.courses}}<Br>
           {{l?.description}}<br>
-          {{l?.timetables[0].classname}}
-        </td> 
-        </tr>
-    </tbody>
-  </table>
+       
+        <div *ngFor= "let t of l.timetables">
+          {{t?.classname}}
+        </div>
+      </div>
 
 </div>
 </body>

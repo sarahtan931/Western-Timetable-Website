@@ -10,17 +10,19 @@ import { CoursesService } from '../../services/courses.service';
 })
 export class SearchCourseComponent implements OnInit {
   @Input() course:CItem[];
+  review: [];
   subject: string;
   courseNum: string;
   errorMessage: string;
   msg: string;
+  isShown: boolean = false ; // hidden by default
 
   constructor(private courseService: CoursesService) { }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {};
+  
   onSubmit(f: NgForm) {
+    this.isShown = false;
     this.errorMessage = "";
     this.course = [];
     this.msg = "";
@@ -28,7 +30,7 @@ export class SearchCourseComponent implements OnInit {
     if (f.value.subject!= "" && f.value.courseNum!=""){
     this.courseService.getCourseCode(f.value.subject, f.value.courseNum).subscribe({
       next: data => {
-        this.course = data
+        this.course = data;
         console.log(this.course)
       },
       error: error=> {
@@ -42,6 +44,10 @@ export class SearchCourseComponent implements OnInit {
     console.log('input both')
     this.msg = "Please enter a valid course.";
   }
+}
+
+toggleShow() {
+this.isShown = ! this.isShown;
 }
 
 }

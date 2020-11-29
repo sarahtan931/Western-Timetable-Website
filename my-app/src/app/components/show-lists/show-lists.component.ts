@@ -9,6 +9,7 @@ import { List } from '../../Models/Course';
 })
 export class ShowListsComponent implements OnInit {
   @Input() list: List[];
+  timetables: Array<any>;
 
   constructor(private courseServices: CoursesService) { }
 
@@ -19,6 +20,7 @@ export class ShowListsComponent implements OnInit {
     this.courseServices.getLists().subscribe(
       l => this.list = l
     )
+   
   }
 
   showIDs(){

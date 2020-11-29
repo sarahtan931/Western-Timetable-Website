@@ -1,0 +1,36 @@
+<p>show-timetable works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+
+<body>
+<div class="background2">
+  <div>Show Timetable for a given course list</div>
+  <p>Please enter a course list name</p>
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <input [(ngModel)]="name" name="name">
+    <button>Submit</button>
+  </form>
+  <div class="err" ng-if="errorMessage">{{ errorMessage }}{{msg}}</div>
+  <table>
+    <tbody>
+        <tr *ngFor="let t of timetable">
+          <td>
+          <Strong> {{t?.subject}} {{t?.catalog_nbr}}
+         </Strong>
+         {{t?.classname}}
+         {{t?.class_section}}
+         {{t?.ssr_component}}
+         {{t?.descrlong}}
+         {{t?.class_section}}
+         {{t?.start_time}}
+         {{t?.end_time}}
+         {{t?.campus}}
+         {{t?.days}}
+        </td> 
+        </tr>
+    </tbody>
+  </table>
+  
+</div>
+</body>

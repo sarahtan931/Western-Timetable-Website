@@ -12,6 +12,7 @@ import { SearchKeywordComponent } from './components/search-keyword/search-keywo
 import { ShowListsComponent } from './components/show-lists/show-lists.component';
 import { SearchCourseComponent } from './components/search-course/search-course.component';
 import { RegisterComponent } from './register/register.component';
+import { ShowTimetableComponent } from './components/show-timetable/show-timetable.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { RegisterComponent } from './register/register.component';
     SearchKeywordComponent,
     ShowListsComponent,
     SearchCourseComponent,
-    RegisterComponent
+    RegisterComponent,
+    ShowTimetableComponent
   
   ],
   imports: [

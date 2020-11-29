@@ -34,7 +34,6 @@ router.get('/showschedule/:owner', auth.required ,(req, res) =>{
     })           
 })
 
-
 //GET current route (required, only authenticated users have access)
 router.get('/current', auth.required, (req, res, next) => {
     const { payload: { id } } = req;
@@ -49,7 +48,7 @@ router.get('/current', auth.required, (req, res, next) => {
       });
   });
 
-  //make a review
+//make a review
 router.post('/makereview', auth.required, (req, res)=>{
     let subject = req.body.subject;
     let catalog_nbr = req.body.catalog_nbr;
@@ -121,7 +120,11 @@ router.post('/makeschedule', [
                         "classname": e.className,
                         "class_section": e.course_info[0].class_section,
                         "ssr_component":e.course_info[0].ssr_component,
-                        "course_info": e.course_info[0],
+                        "descrlong": e.course_info[0].descrlong,
+                        "start_time": e.course_info[0].start_time,
+                        "end_time": e.course_info[0].end_time,
+                        "campus": e.course_info[0].campus,
+                        "days": e.course_info[0].days,
                         "catalog_nbr": e.catalog_nbr,
                         "subject": e.subject
                     });
@@ -172,16 +175,19 @@ router.put('/updateschedule', [
             for (let i = 0; i < numArr.length; i++){ 
                     //only allowing the user to enter a valid timetable   
                 if(numArr[i] != "" && idArr[i] !="" && newdata.find(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])){
-                   // arr.push({courseName: numArr[i], courseID: idArr[i]});
                    const data = newdata.filter(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])
                    data.map(function(e){
                        arr.push({
-                           "classname": e.className,
-                           "class_section": e.course_info[0].class_section,
-                           "ssr_component":e.course_info[0].ssr_component,
-                           "course_info": e.course_info[0],
-                           "catalog_nbr": e.catalog_nbr,
-                           "subject": e.subject
+                        "classname": e.className,
+                        "class_section": e.course_info[0].class_section,
+                        "ssr_component":e.course_info[0].ssr_component,
+                        "descrlong": e.course_info[0].descrlong,
+                        "start_time": e.course_info[0].start_time,
+                        "end_time": e.course_info[0].end_time,
+                        "campus": e.course_info[0].campus,
+                        "days": e.course_info[0].days,
+                        "catalog_nbr": e.catalog_nbr,
+                        "subject": e.subject
                        });
                        })
                 }
