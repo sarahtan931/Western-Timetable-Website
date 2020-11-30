@@ -25,11 +25,23 @@ getCourses(): Observable <Course[]>{
   return this.http.get<Course[]>(this.url);
     }
 
+
 getKeyword(keyword: string): Observable <CItem[]>{
   let link = `${this.newurl}/open/searchkeyword/${keyword}`
   return this.http.get<CItem[]>(link).pipe(
     catchError(this.handleError)
   )
+}
+
+toggleReview(id: String): Observable <Review>{
+  let body = {
+    "review" : id
+  }
+  let link = `${this.newurl}admin/togglereview` 
+  return this.http.put<Review>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  )
+
 }
 
 getLists(): Observable <List[]>{

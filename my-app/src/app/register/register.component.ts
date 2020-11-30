@@ -14,6 +14,7 @@ export class RegisterComponent implements OnInit {
   email: String;
   password: String;
   msg: String;
+  username: String;
 
 
   constructor(private authService: AuthService, private router: Router) { }
@@ -25,7 +26,7 @@ export class RegisterComponent implements OnInit {
     this.errorMessage = "";
     this.msg = "";
 
-    this.authService.register(f.value.email, f.value.password).subscribe({
+    this.authService.register(f.value.username, f.value.email, f.value.password).subscribe({
       next: data => {
         console.log("Made an account");
         this.msg = "Successfully made account"

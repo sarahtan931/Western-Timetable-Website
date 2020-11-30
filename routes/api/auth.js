@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
-const auth = require('../auth');
+//const auth = require('../auth');
 const {check , validationResult}  = require('express-validator');
 const fs = require('fs');
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
@@ -12,7 +12,7 @@ const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
 
 //show all the users schedules
-router.get('/showschedule/:owner', auth.required ,(req, res) =>{
+router.get('/showschedule/:owner', (req, res) =>{
     let newarr = []
     owner = req.params.owner;
     Timetable.find(({"owner": owner}), function (err, review) {
@@ -35,7 +35,7 @@ router.get('/showschedule/:owner', auth.required ,(req, res) =>{
 })
 
 //GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, (req, res, next) => {
+router.get('/current', (req, res, next) => {
     const { payload: { id } } = req;
   
     return Users.findById(id)
@@ -49,7 +49,7 @@ router.get('/current', auth.required, (req, res, next) => {
   });
 
 //make a review
-router.post('/makereview', auth.required, (req, res)=>{
+router.post('/makereview', (req, res)=>{
     let subject = req.body.subject;
     let catalog_nbr = req.body.catalog_nbr;
     var err = validationResult(req);

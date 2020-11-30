@@ -16,7 +16,8 @@ export class Review{
     catalog_nbr: String;
     hidden: Boolean;
     review: String;
-    rating: Number
+    rating: Number;
+    date: Date;
 }
 
 export class CTimetable{

@@ -32,27 +32,58 @@ login(email, password): Observable<User>{
   );
 }
 
-/*
-logout(): Observable<User>{
-  let link = `${this.url}open/logout`
-  return this.http.get<User>(link).pipe(
+showUsers(): Observable <User[]>{
+  let link = `${this.url}admin/showusers`
+  return this.http.get<User[]>(link);
+}
+
+setActive(email): Observable <User>{
+  let body = {
+    'email': email
+  }
+  let link = `${this.url}admin/setactive`
+  return this.http.put<User>(link, body, this.httpOptions).pipe(
     catchError(this.handleError)
-  );
-}*/
+  )
+}
+
+setDeActive(email): Observable <User>{
+  let body = {
+    'email': email
+  }
+  let link = `${this.url}admin/setdeactive`
+  return this.http.put<User>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  )
+}
+
+setAdmin(email): Observable<User>{
+  let body = {
+    'email': email
+  }
+  let link = `${this.url}admin/setadmin`
+  return this.http.put<User>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  )
+}
+
 setLocalStorage(responseObj){
   localStorage.setItem('token', responseObj.token);
+  localStorage.setItem('email', responseObj.email);
+  localStorage.setItem('role', responseObj.role)
 }
 
 logout(){
-  localStorage.remove('token')
+  localStorage.removeItem('token')
 }
 
-
-register(email, password): Observable<User>{
+register(username, email, password): Observable<User>{
   let link = `${this.url}open/register/`
   let body = {"user":{
     'email': email,
-    'password': password},
+    'password': password,
+    'name': username
+  },
     'email': email
   }
   return this.http.post<User>(link, body, this.httpOptions).pipe(
@@ -68,7 +99,7 @@ private handleError(error: HttpErrorResponse) {
       `Backend returned code ${error.status}, ` +
       `body was: ${error.error}`);
   }
-  console.log(error.error.message)
-  return throwError(error.message);
+  
+  return throwError(error.status);
 }
 }

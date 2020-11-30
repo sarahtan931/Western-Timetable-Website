@@ -13,11 +13,18 @@ export class HomeadminComponent implements OnInit {
   errorMessage: String;
   email: String;
   password: String;
+  name: String;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+    this.name = localStorage.getItem('email')
+    console.log(this.name)
   }
 
+  logout(){
+    this.authService.logout()
+    this.router.navigateByUrl('/home')
+  }
  
 }

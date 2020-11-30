@@ -5,16 +5,18 @@
 
 <body>
 <div class="background2">
-  <div>Course Lists</div>
-<button (click)="showReviews()">Show Course Lists</button>
+  <div>Reviews</div>
+  <div class="err" ng-if="msg">{{msg}}</div>
+<button (click)="showReviews()">Show Reviews</button>
     <div class='all' *ngFor="let r of review;">
      <p id='review'> Review ID:  {{r?.reviewID}} </p>
-      Subject:  {{r?.subject}}
-      Hidden:  {{r?.hidden}}
-      Rating:  {{r?.rating}}
-      Review: {{r?.review}}<Br>   
+      Subject:  {{r?.subject}} {{r?.catalog_nbr}} <br>
+      Hidden:  {{r?.hidden}} <br>
+      Rating:  {{r?.rating}} <br>
+      Review: {{r?.review}}<Br> 
+      Date Created: {{r?.date}} <br>
+      <button (click)="toggle(r.reviewID, r.hidden)"> Toggle Hidden Property</button>
+      
 </div>
-
-
 </div>
 </body>

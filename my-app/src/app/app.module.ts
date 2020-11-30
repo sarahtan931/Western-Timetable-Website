@@ -14,7 +14,6 @@ import { SearchCourseComponent } from './components/search-course/search-course.
 import { RegisterComponent } from './register/register.component';
 import { ShowTimetableComponent } from './components/show-timetable/show-timetable.component';
 import { HomeadminComponent } from './homeadmin/homeadmin.component';
-import { GrantAdminComponent } from './components/grant-admin/grant-admin.component';
 import { HideReviewComponent } from './components/hide-review/hide-review.component';
 import { ActivateUserComponent } from './components/activate-user/activate-user.component';
 import { AuthService } from './services/auth.service';
@@ -33,7 +32,6 @@ import { AuthInterceptor } from './services/auth-interceptor'
     RegisterComponent,
     ShowTimetableComponent,
     HomeadminComponent,
-    GrantAdminComponent,
     HideReviewComponent,
     ActivateUserComponent
   

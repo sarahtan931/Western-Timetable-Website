@@ -3,7 +3,7 @@ const passport = require('passport');
 const router = require('express').Router();
 const express = require('express');
 const app = express()
-const auth = require('../auth');
+//const auth = require('../auth');
 const fs = require('fs');
 const stringSimilarity = require('string-similarity');
 const {check , validationResult}  = require('express-validator');
@@ -17,8 +17,9 @@ const Review = mongoose.model('Review');
 //POST new user route (optional, everyone has access)
 router.post('/register', [
   check("email").normalizeEmail().isEmail()
-], auth.optional, (req, res, next) => {
+], (req, res, next) => {
   const { body: { user } } = req;
+  console.log(user)
   var err = validationResult(req);
   if (!err.isEmpty()) {
       res.status('404').send('please enter a valid email')
@@ -53,7 +54,7 @@ router.get('/auth/facebook', passport.authenticate('facebook'));
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/',  failureRedirect: '/login' }));*/
 
-router.post('/login', auth.optional, (req, res, next) => {
+router.post('/login', (req, res, next) => {
  const { body: { user } } = req;
   if(!user.email) {
     return res.status(404).send('No email');
@@ -66,30 +67,19 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
      return res.status('404').send('Error')
     }
     if(passportUser.active == false){
-      return res.status('404').send(new Error('MEssage 2'))
+      return res.status(422).send(new Error('MEssage 2'))
     }
     if(passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
       //res.setHeader('x-access-token', user.token)
-      console.log(user.toAuthJSON())
-      return res.status(200).json({ success: true, token: "Bearer " + user.token});
-      //return res.send(user.toAuthJSON());
+      //console.log(user.toAuthJSON())
+      return res.status(200).json({ success: true, token: "Bearer " + user.token, email: user.email, role: user.role});
     }
     return status(400).info;
   })(req, res, next);
 });
 
-router.get('/protected', passport.authenticate('jwt', { session: false }), (req, res, next) => {
- // console.log(req)
-  //console.log(req.user)
-  res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
-});
-
-router.get('/logout', function(req, res){
-    req.logout();
-   return res.send('succesfully logged out')
-});
 
 //search by keyword softmatch
 router.get('/searchkeyword/:keyword', (req, res) => {

@@ -1,4 +1,4 @@
-const jwt = require('express-jwt');
+/*const jwt = require('express-jwt');
 const express = require('express');
 
 
@@ -26,4 +26,4 @@ const auth = {
   }),
 };
 
-module.exports = auth;
+module.exports = auth;*/

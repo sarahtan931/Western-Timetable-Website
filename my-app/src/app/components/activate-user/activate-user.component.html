@@ -1,1 +1,21 @@
 <p>activate-user works!</p>
+
+<body>
+    <div class="background2">
+      <div>Users</div>
+      <div  ng-if="msg">{{msg}}</div>
+    <button (click)="showUsers()">Refresh Users</button>
+    <div class='user' *ngFor="let u of userArray">
+        {{u?.name}} <br>
+        {{u?.email}} <br>
+        {{u?.role}} <br>
+        {{u?.active}} <br>
+
+        <button (click)="setActive(u.email)">Set user as actived</button>
+        <button (click)="setDeActive(u.email)">Set user as deactivated</button>
+        <button (click)="setAdmin(u.email)">Give admin privileges</button>
+    </div>
+    
+    </div>
+    
+</body>

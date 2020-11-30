@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
-const auth = require('../auth');
+//const auth = require('../auth');
 const {check , validationResult}  = require('express-validator');
 const { nextTick } = require('process');
 const jwt_decode = require('jwt-decode');
@@ -12,6 +12,7 @@ const Review = mongoose.model('Review');
 const jwt = require('jsonwebtoken');
 
 //checking the user role
+/*
 function userRole(req, res, next) {
     const email = req.decoded.email;
     if (email) {
@@ -45,10 +46,10 @@ function verifyToken(req, res, next) {
 
 const express = require('express')
 const app = express()
-app.use(userRole)
+app.use(userRole)*/
 
 //showing all users
-router.get('/showusers', (req, res) =>{
+router.get('/showusers', passport.authenticate('jwt', { session: false }), (req, res) =>{
     console.log(req.decoded)
     Users.find(function (err, user){
         if (err || !user){
@@ -61,13 +62,12 @@ router.get('/showusers', (req, res) =>{
 })
 
 //update user to be of type admin
-router.put('/updateadmin', (req, res)=>{
+router.put('/setadmin', passport.authenticate('jwt', { session: false }), (req, res)=>{
   //  var err = validationResult(req);
     let email = req.body.email;
-
     Users.findOne(({"email": email}), function (err, user) {
-        if (err || !user){ 
-            res.status(404).send(`not found`);
+        if (err || !user || user.role == "ADMIN"){ 
+            res.status(404).send(`User is already an admin`);
         }
          else{ 
         user.role = "ADMIN";
@@ -78,28 +78,38 @@ router.put('/updateadmin', (req, res)=>{
 }) 
 
 //update user active status
-router.put('/updateactive', (req, res)=>{
-   // var err = validationResult(req);
+router.put('/setactive', passport.authenticate('jwt', { session: false }), (req, res)=>{
     let email = req.body.email;
-
     Users.findOne(({"email": email}), function (err, user) {
-        if (err || !user){ 
-            res.status(404).send(`not found`);
+        if (err || !user || user.active == true){ 
+            res.status(404).send(`User is already active`);
         }
-         else{ 
-            if (user.active == false){
-                user.active = true;
-            }else{
-                user.active = false;
-            }
+         else{  
+        user.active = true;  
         user.save() 
         res.send(user) 
         }  
     })
 }) 
+
+//update user active status
+router.put('/setdeactive', passport.authenticate('jwt', { session: false }), (req, res)=>{
+     let email = req.body.email;
+ 
+     Users.findOne(({"email": email}), function (err, user) {
+         if (err || !user || user.active == false){ 
+             res.status(404).send(`User is already deactivated`);
+         }
+          else{   
+         user.active = false;   
+         user.save() 
+         res.send(user) 
+         }  
+     })
+ }) 
   
 router.get('/showreview', passport.authenticate('jwt', { session: false }), (req, res) =>{
-
+    //console.log(req.user)
     Review.find(function (err, review) {
         if (err || !review || review.length <= 0){
             res.status(404).send(`not found`);
@@ -111,27 +121,29 @@ router.get('/showreview', passport.authenticate('jwt', { session: false }), (req
                 catalog_nbr: e.catalog_nbr,
                 hidden: e.hidden,
                 review: e.review,
-                rating: e.rating}
+                rating: e.rating,
+                date: e.date
+            }
             })
             res.send(arr);
         }
     })
 }) 
 
-router.put('/togglereview',auth.required, (req, res)=>{
+router.put('/togglereview', passport.authenticate('jwt', { session: false }), (req, res)=>{
+    let review = req.body.review;
     var err = validationResult(req);
     if (!err.isEmpty()) {
         console.log(err.mapped())
         res.status(404).send(`Not valid input`);
     } else {
-        Review.findOne(({"reviewID": "1"}), function (err, review) {
+        Review.findOne(({"reviewID": review}), function (err, review) {
             if (err || !review){ 
                 res.status(404).send(`Cant find the review`);
             }
             else{
                 if (review.hidden == true){ review.hidden = false;}
                 else{ review.hidden = true;}
-            console.log('updating review')
             review.save()
             .then((result) => res.send(result))
             .catch((err) => console.log(err))
