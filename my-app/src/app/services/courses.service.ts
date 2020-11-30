@@ -1,6 +1,6 @@
 import { Injectable, ErrorHandler} from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Course, CTimetable, CItem, Schedule, List} from '../Models/Course';
+import { Course, CTimetable, CItem, Schedule, List, Review} from '../Models/Course';
 import { Observable, throwError } from 'rxjs';
 import {catchError} from 'rxjs/operators'; 
 
@@ -57,6 +57,11 @@ getCourseNum(courseNum: string): Observable<CItem[]>{
   return this.http.get<CItem[]>(link).pipe(
     catchError(this.handleError)
   )
+}
+
+getReviews(): Observable<Review[]>{
+  let link = `${this.newurl}admin/showreview/`
+  return this.http.get<Review[]>(link)
 }
 
 

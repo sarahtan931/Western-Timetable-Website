@@ -19,18 +19,5 @@ export class HomeadminComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  logout(){
-    this.authService.logout().subscribe({
-      next: data => {
-        //console.log(JSON.stringify(data))
-        this.router.navigateByUrl('/home')
-      },
-      error: error=> {
-        this.errorMessage = error;
-        this.msg = "Please enter a valid course.";
-        console.log('error', error)
-      }
-    })
-  }
  
 }

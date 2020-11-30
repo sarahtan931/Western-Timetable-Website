@@ -24,6 +24,8 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(f.value.email, f.value.password).subscribe({
       next: data => {
+        this.authService.setLocalStorage(data)
+        console.log(data)
         console.log("Success");
         //this.router.navigateByUrl('/homeauth')
         if (data.role == 'BASIC'){

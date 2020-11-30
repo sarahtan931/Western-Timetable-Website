@@ -1,9 +1,9 @@
 const jwt = require('express-jwt');
+const express = require('express');
+
 
 const getTokenFromHeaders = (req) => {
-  //const { headers: { authorization } } = req;
-  var authorization = req.headers['x-access-token'];
-  
+ var authorization = req.headers['x-access-token'];
   if(authorization) {
     return authorization;
   }
@@ -24,7 +24,6 @@ const auth = {
     credentialsRequired: false,
     algorithms: ['HS256']
   }),
-  
 };
 
 module.exports = auth;

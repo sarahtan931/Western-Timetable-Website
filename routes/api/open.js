@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
+const express = require('express');
+const app = express()
 const auth = require('../auth');
 const fs = require('fs');
 const stringSimilarity = require('string-similarity');
@@ -8,7 +10,6 @@ const {check , validationResult}  = require('express-validator');
 const jwt = require('jsonwebtoken');
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
 var newdata=JSON.parse(data);
-
 const Users = mongoose.model('Users');
 const Timetable = mongoose.model('Timetables');
 const Review = mongoose.model('Review');
@@ -70,10 +71,19 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
     if(passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
-      return res.send(user.toAuthJSON());
+      //res.setHeader('x-access-token', user.token)
+      console.log(user.toAuthJSON())
+      return res.status(200).json({ success: true, token: "Bearer " + user.token});
+      //return res.send(user.toAuthJSON());
     }
     return status(400).info;
   })(req, res, next);
+});
+
+router.get('/protected', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+ // console.log(req)
+  //console.log(req.user)
+  res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
 });
 
 router.get('/logout', function(req, res){
@@ -342,6 +352,5 @@ router.get('/findbynum/:catalog_nbr/', (req,res) =>{
   }
 }
 )
-
 
 module.exports = router;

@@ -28,7 +28,10 @@ function userRole(req, res, next) {
 
 //verifying the token
 function verifyToken(req, res, next) {
-    var token = req.headers['x-access-token'];
+   //var token = req.headers['x-access-token'];
+   let token = req.cookies.access_token;
+  // var token = req.decoded.token
+   console.log(req.decoded.token)
     if (!token)
       return res.status(403).send({ auth: false, message: 'No token provided.' });   
     jwt.verify(token, 'secret', function(err, decoded) {
@@ -45,7 +48,7 @@ const app = express()
 app.use(userRole)
 
 //showing all users
-router.get('/showusers', auth.required, verifyToken, userRole, (req, res) =>{
+router.get('/showusers', (req, res) =>{
     console.log(req.decoded)
     Users.find(function (err, user){
         if (err || !user){
@@ -95,7 +98,8 @@ router.put('/updateactive', (req, res)=>{
     })
 }) 
   
-router.get('/showreview', auth.required, (req, res) =>{
+router.get('/showreview', passport.authenticate('jwt', { session: false }), (req, res) =>{
+
     Review.find(function (err, review) {
         if (err || !review || review.length <= 0){
             res.status(404).send(`not found`);

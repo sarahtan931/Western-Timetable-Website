@@ -10,6 +10,15 @@ export class CItem{
     reviews: Array<any>;
 }
 
+export class Review{
+    reviewID: String;
+    subject: String;
+    catalog_nbr: String;
+    hidden: Boolean;
+    review: String;
+    rating: Number
+}
+
 export class CTimetable{
     subname: String;
     subcode: String;

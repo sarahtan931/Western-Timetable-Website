@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +14,11 @@ import { SearchCourseComponent } from './components/search-course/search-course.
 import { RegisterComponent } from './register/register.component';
 import { ShowTimetableComponent } from './components/show-timetable/show-timetable.component';
 import { HomeadminComponent } from './homeadmin/homeadmin.component';
+import { GrantAdminComponent } from './components/grant-admin/grant-admin.component';
+import { HideReviewComponent } from './components/hide-review/hide-review.component';
+import { ActivateUserComponent } from './components/activate-user/activate-user.component';
+import { AuthService } from './services/auth.service';
+import { AuthInterceptor } from './services/auth-interceptor'
 
 
 @NgModule({
@@ -27,7 +32,10 @@ import { HomeadminComponent } from './homeadmin/homeadmin.component';
     SearchCourseComponent,
     RegisterComponent,
     ShowTimetableComponent,
-    HomeadminComponent
+    HomeadminComponent,
+    GrantAdminComponent,
+    HideReviewComponent,
+    ActivateUserComponent
   
   ],
   imports: [
@@ -38,6 +46,10 @@ import { HomeadminComponent } from './homeadmin/homeadmin.component';
   ],
   providers: [
     {provide: Window, useValue: window},
+    AuthService,
+    {provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true}
     
   ],
   bootstrap: [AppComponent]

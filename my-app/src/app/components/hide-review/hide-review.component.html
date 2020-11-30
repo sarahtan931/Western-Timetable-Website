@@ -1,0 +1,20 @@
+<p>hide-review works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+
+<body>
+<div class="background2">
+  <div>Course Lists</div>
+<button (click)="showReviews()">Show Course Lists</button>
+    <div class='all' *ngFor="let r of review;">
+     <p id='review'> Review ID:  {{r?.reviewID}} </p>
+      Subject:  {{r?.subject}}
+      Hidden:  {{r?.hidden}}
+      Rating:  {{r?.rating}}
+      Review: {{r?.review}}<Br>   
+</div>
+
+
+</div>
+</body>

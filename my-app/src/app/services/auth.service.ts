@@ -32,11 +32,19 @@ login(email, password): Observable<User>{
   );
 }
 
+/*
 logout(): Observable<User>{
   let link = `${this.url}open/logout`
   return this.http.get<User>(link).pipe(
     catchError(this.handleError)
   );
+}*/
+setLocalStorage(responseObj){
+  localStorage.setItem('token', responseObj.token);
+}
+
+logout(){
+  localStorage.remove('token')
 }
 
 
