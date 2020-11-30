@@ -32,15 +32,14 @@ export class HideReviewComponent implements OnInit {
       this.msg = error;
       this.msg = "Please enter a valid course.";
       console.log('error', error)
-    }
-    }
+    }}
     )
    
   }
 
   toggle(id, hidden){
     this.msg = "";
-    console.log(id)
+   // console.log(id)
     this.courseServices.toggleReview(id).subscribe(
       l => this.newReview = l
     )

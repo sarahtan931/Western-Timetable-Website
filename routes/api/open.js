@@ -3,7 +3,6 @@ const passport = require('passport');
 const router = require('express').Router();
 const express = require('express');
 const app = express()
-//const auth = require('../auth');
 const fs = require('fs');
 const stringSimilarity = require('string-similarity');
 const {check , validationResult}  = require('express-validator');
@@ -72,9 +71,7 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
     if(passportUser) {
       const user = passportUser;
       user.token = passportUser.generateJWT();
-      //res.setHeader('x-access-token', user.token)
-      //console.log(user.toAuthJSON())
-      return res.status(200).json({ success: true, token: "Bearer " + user.token, email: user.email, role: user.role});
+      return res.status(200).json({ success: true, token: "Bearer " + user.token, email: user.email, role: user.role, name: user.name});
     }
     return status(400).info;
   })(req, res, next);
@@ -255,7 +252,6 @@ router.get('/findbyboth/:subject/:catalog_nbr/', (req,res) =>{
 
 router.get('/findbysubject/:subject', (req,res) =>{
   let subject = req.params.subject;
-  //converting it to uppercase to make the search case insensitive
   subject = subject.toUpperCase().toString();
   let newarr = []
 
@@ -298,7 +294,6 @@ router.get('/findbysubject/:subject', (req,res) =>{
 
 router.get('/findbynum/:catalog_nbr/', (req,res) =>{
   let courseNum = req.params.catalog_nbr;
-  //converting it to uppercase to make the search case insensitive
   courseNum = courseNum.toUpperCase().toString();
   let newarr = []
 

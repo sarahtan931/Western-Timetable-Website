@@ -84,6 +84,29 @@ showTimetable(name: string): Observable<Schedule[]>{
   );
 }
 
+showTimetableAuth(name: string): Observable<Schedule[]>{
+  let link = `${this.newurl}auth/schedule/find/${name}`
+  return this.http.get<Schedule[]>(link).pipe(
+    catchError(this.handleError)
+  );
+}
+
+createReview(name, subject, catalog_nbr, review, rating): Observable<Review>{
+  let body = {          
+    "name": name,
+    "subject": subject,
+    "catalog_nbr": catalog_nbr,
+    "hidden": false,
+    "review": review,
+    "rating": rating
+}
+  let link = `${this.newurl}auth/makereview`
+  return this.http.post<Review>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  );
+}
+
+
 //getting all schedules in database
 getSchedules(): Observable<Schedule[]>{
   let link = `${this.url}schedule/show`
@@ -104,36 +127,35 @@ createSchedule(name): Observable<Schedule>{
 }
 
 //deleting a schedule
-delSchedule(name): Observable<Schedule>{
-  let link = `${this.url}schedule/delwithname/${name}`
-
-  return this.http.delete<Schedule>(link, this.httpOptions)
+delList(email, name): Observable<List>{
+  let link = `${this.newurl}auth/dellist/${email}/${name}`
+  return this.http.delete<List>(link, this.httpOptions)
   .pipe(catchError(this.handleError))
 }
 
-//deleting all schedules
-delAllSched(): Observable<Schedule>{
-  let link = `${this.url}schedule/del/`
-  return this.http.delete<Schedule>(link, this.httpOptions)
-  .pipe(catchError(this.handleError))
-}
 
 //getting timetable entries
-getPairs(name): Observable<Schedule>{
-  let link = `${this.url}schedule/find/${name}`
-  return this.http.get<Schedule>(link, this.httpOptions)
+getUserList(email): Observable<List[]>{
+  let link = `${this.newurl}auth/showschedule/${email}`;
+  
+  return this.http.get<List[]>(link, this.httpOptions)
   .pipe(catchError(this.handleError))
 }
 
 //making timetable entries
-makePairs(sched, letters, nums): Observable<Schedule>{
-  let link = `${this.url}schedule/updatepairs/`
+createList(name, owner, description, owneremail, courseId, courseNum, hidden): Observable<List>{
+  let link = `${this.newurl}auth/makeschedule/`
   let body = {
-    'schedule': sched,
-    'courseNum': letters,
-    'courseId' : nums
+      "owner": owner,
+      "name": name,
+      "description": description,
+      "email": owneremail,
+      "courseId": courseId,
+      "courseNum": courseNum,
+      "hidden": hidden
   }
-  return this.http.put<Schedule>(link, body, this.httpOptions)
+  
+  return this.http.post<List>(link, body, this.httpOptions)
   .pipe(catchError(this.handleError))
 }
 

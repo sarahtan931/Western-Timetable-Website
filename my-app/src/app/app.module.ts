@@ -17,8 +17,10 @@ import { HomeadminComponent } from './homeadmin/homeadmin.component';
 import { HideReviewComponent } from './components/hide-review/hide-review.component';
 import { ActivateUserComponent } from './components/activate-user/activate-user.component';
 import { AuthService } from './services/auth.service';
-import { AuthInterceptor } from './services/auth-interceptor'
-
+import { AuthInterceptor } from './services/auth-interceptor';
+import { CreateListComponent } from './components/create-list/create-list.component';
+import { ShowUserListComponent } from './components/show-user-list/show-user-list.component';
+import { CreateReviewComponent } from './components/create-review/create-review.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,10 @@ import { AuthInterceptor } from './services/auth-interceptor'
     ShowTimetableComponent,
     HomeadminComponent,
     HideReviewComponent,
-    ActivateUserComponent
+    ActivateUserComponent,
+    CreateListComponent,
+    ShowUserListComponent,
+    CreateReviewComponent
   
   ],
   imports: [

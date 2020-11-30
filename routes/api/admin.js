@@ -11,46 +11,9 @@ const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
 const jwt = require('jsonwebtoken');
 
-//checking the user role
-/*
-function userRole(req, res, next) {
-    const email = req.decoded.email;
-    if (email) {
-      Users.find(({"email": email}),function (err, user){
-        req.currentuser = user;
-        if (err || !user || req.currentuser[0].role != "ADMIN"){
-            res.status(404).send(`you do not have these permissions`); 
-        } else{
-            next();
-        }
-    })
-}
-}
-
-//verifying the token
-function verifyToken(req, res, next) {
-   //var token = req.headers['x-access-token'];
-   let token = req.cookies.access_token;
-  // var token = req.decoded.token
-   console.log(req.decoded.token)
-    if (!token)
-      return res.status(403).send({ auth: false, message: 'No token provided.' });   
-    jwt.verify(token, 'secret', function(err, decoded) {
-      if (err)
-      return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-      var decoded = jwt_decode(token);
-      req.decoded = decoded
-      next();
-    });
-  }
-
-const express = require('express')
-const app = express()
-app.use(userRole)*/
-
 //showing all users
 router.get('/showusers', passport.authenticate('jwt', { session: false }), (req, res) =>{
-    console.log(req.decoded)
+    console.log(req.body.role)
     Users.find(function (err, user){
         if (err || !user){
             res.status(404).send(`not found`); 
@@ -63,7 +26,6 @@ router.get('/showusers', passport.authenticate('jwt', { session: false }), (req,
 
 //update user to be of type admin
 router.put('/setadmin', passport.authenticate('jwt', { session: false }), (req, res)=>{
-  //  var err = validationResult(req);
     let email = req.body.email;
     Users.findOne(({"email": email}), function (err, user) {
         if (err || !user || user.role == "ADMIN"){ 

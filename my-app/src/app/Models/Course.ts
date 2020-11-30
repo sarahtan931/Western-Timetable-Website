@@ -43,4 +43,5 @@ export class List{
     owner: String;
     date: Date;
     timetables: Array<any>;
+    ownerEmail: String;
 }

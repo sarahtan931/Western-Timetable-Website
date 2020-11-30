@@ -70,7 +70,8 @@ setAdmin(email): Observable<User>{
 setLocalStorage(responseObj){
   localStorage.setItem('token', responseObj.token);
   localStorage.setItem('email', responseObj.email);
-  localStorage.setItem('role', responseObj.role)
+  localStorage.setItem('role', responseObj.role);
+  localStorage.setItem('name', responseObj.name);
 }
 
 logout(){

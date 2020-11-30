@@ -1,0 +1,15 @@
+<p>create-review works!</p>
+
+
+
+<div class='background'>
+    <div class="err" ng-if="msg">{{msg}}</div>
+    <div class="err" ng-if="newmsg">{{newmsg}}</div>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <input [(ngModel)]="subject" name="subject" placeholder="Enter Subject">
+        <input [(ngModel)]="catalog_nbr" name="catalog_nbr" placeholder="Enter Catalog Number">
+        <input [(ngModel)]="review" name="review" placeholder="Enter Review">
+        <input [(ngModel)]="rating" name="rating" placeholder="Enter Rating">
+        <button>Submit</button>
+      </form>
+</div>

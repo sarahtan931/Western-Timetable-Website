@@ -16,12 +16,13 @@ const UsersSchema = new Schema({
 const timetables = new Schema({
   owner: {type: String},
   name: {type: String},
+  email: {type: String},
   timetable: { type : Array , "default" : [] },
   numCourses:{ type: Number},
   description: {type: String},
   date: {type: Date},
   editdate: {type: Date},
-  hidden: {type: Boolean}
+  hidden: {type: Boolean},
 })
 
 const courseReviewSchema = new Schema({
@@ -58,6 +59,7 @@ UsersSchema.methods.generateJWT = function() {
     role: this.role,
     email: this.email,
     id: this._id,
+    name: this.name,
     exp: parseInt(expirationDate.getTime() / 1000, 10),
   }, 'secret');
 }
@@ -67,7 +69,8 @@ UsersSchema.methods.toAuthJSON = function() {
     _id: this._id,
     email: this.email,
     token: 'Bearer ' + this.generateJWT(),
-    role: this.role
+    role: this.role,
+    name: this.name
   };
 };
 

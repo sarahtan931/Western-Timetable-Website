@@ -29,8 +29,8 @@ export class ShowListsComponent implements OnInit {
   toggleShow() {
     this.isShown = ! this.isShown;
     }
- 
 
+ 
   }
 
 

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
-//const auth = require('../auth');
 const {check , validationResult}  = require('express-validator');
 const fs = require('fs');
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
@@ -12,10 +11,10 @@ const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
 
 //show all the users schedules
-router.get('/showschedule/:owner', (req, res) =>{
+router.get('/showschedule/:email', (req, res) =>{
     let newarr = []
-    owner = req.params.owner;
-    Timetable.find(({"owner": owner}), function (err, review) {
+    email = req.params.email;
+    Timetable.find(({"email": email}), function (err, review) {
         if (err || !review ){
             res.status(404).send(`not found`);
         }
@@ -26,6 +25,8 @@ router.get('/showschedule/:owner', (req, res) =>{
                     "name": e.name,
                     "description": e.description,
                     "date": e.date,
+                    "hidden": e.hidden,
+                    "timetables": e.timetable
                   })
               })
               const sorted = newarr.sort((a, b) => b.date - a.date)
@@ -33,20 +34,6 @@ router.get('/showschedule/:owner', (req, res) =>{
             }    
     })           
 })
-
-//GET current route (required, only authenticated users have access)
-router.get('/current', (req, res, next) => {
-    const { payload: { id } } = req;
-  
-    return Users.findById(id)
-      .then((user) => {
-        if(!user) {
-          return res.sendStatus(400);
-        }
-  
-        return res.json({ user: user.toAuthJSON() });
-      });
-  });
 
 //make a review
 router.post('/makereview', (req, res)=>{
@@ -59,7 +46,7 @@ router.post('/makereview', (req, res)=>{
     } else {
         if (newdata.find(p => p.subject == subject && p.catalog_nbr == catalog_nbr)){
         const review = new Review({
-            "reviewID": req.body.reviewID,
+            "reviewID": Math.random().toString(36).substr(2, 9),
             "name": req.body.name,
             "subject": req.body.subject,
             "catalog_nbr": req.body.catalog_nbr,
@@ -87,18 +74,20 @@ router.post('/makeschedule', [
         console.log(err.mapped())
         res.status(404).send(`Not valid input`);
     } else {
+        console.log(req.body)
         let courseNum = req.body.courseNum;
         let courseId = req.body.courseId;
         let name = req.body.name;
         let owner = req.body.owner;
+        let email = req.body.email
         let description = req.body.description;
         let hidden = req.body.hidden;
 
-    if (typeof hidden == "undefined"){
+    if (typeof(hidden) == "undefined"){
         hidden = true;
     }
     Timetable.countDocuments({"owner": owner}, function(err, count){
-        console.log( "Number of course lists from ",owner, " ", count);
+        console.log( "Number of course lists from ",owner, " ", count+1);
         if (count > 20){
             res.status(404).send(`User has 20 timetables`);
         }
@@ -113,8 +102,8 @@ router.post('/makeschedule', [
         let newarr = [];
         for (let i = 0; i < numArr.length; i++){ 
             //only allowing the user to enter a valid timetable        
-            if(numArr[i] != "" && idArr[i] !="" && newdata.find(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])){
-                const data = newdata.filter(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])
+            if(numArr[i] != "" && idArr[i] !="" && newdata.find(p => p.subject === idArr[i] && p.catalog_nbr.toString() === numArr[i])){
+                const data = newdata.filter(p => p.subject === idArr[i] && p.catalog_nbr.toString() === numArr[i])
                 data.map(function(e){
                     newarr.push({
                         "classname": e.className,
@@ -141,6 +130,7 @@ router.post('/makeschedule', [
             "description": description,
             "date": new Date(),
             "hidden": hidden,
+            "email": email,
             "timetable": newarr
          })
         schedule.save()
@@ -203,10 +193,10 @@ router.put('/updateschedule', [
         })
 }) 
 
-router.delete('/schedule/del/:owner/:name', (req, res) =>{
+router.delete('/dellist/:email/:name', (req, res) =>{
     const name = req.params.name;
-    const owner = req.params.owner;
-    Timetable.findOne(({"owner":owner,"name": name}), function (err, timetable) {
+    const email = req.params.email;
+    Timetable.findOne(({"email":email,"name": name}), function (err, timetable) {
         if (err || !timetable || timetable.length <= 0){ 
             res.status(404).send(`not found`);
         }
@@ -214,9 +204,40 @@ router.delete('/schedule/del/:owner/:name', (req, res) =>{
         timetable.deleteOne({"name": name})
         .then((result) => res.send(result))
         .catch((err) => console.log(err))
-      
         }
       })    
 })
+
+//showing timetables
+router.get('/schedule/find/:sched',(req, res) =>{
+    name = req.params.sched
+    let newarr = []
+  
+  Timetable.findOne(({"name": name}), function (err, list) {
+    if (err || !list || list.length <= 0 || list.timetable.length <= 0){
+        res.status(404).send(`not found`);
+    }
+    else {
+      console.log(list)
+      for (i = 0; i < list.timetable.length; i++){
+                newarr.push({
+                'classname': list.timetable[i].classname,
+                'catalog_nbr': list.timetable[i].catalog_nbr,
+                'subject': list.timetable[i].subject,
+                'class_section': list.timetable[i].class_section,
+                'ssr_component': list.timetable[i].ssr_component,
+                'descrlong': list.timetable[i].descrlong,
+                'class_section': list.timetable[i].class_section,
+                'start_time': list.timetable[i].start_time,
+                'end_time': list.timetable[i].end_time,
+                'campus': list.timetable[i].campus,
+                'days': list.timetable[i].days
+                });
+            }
+        res.send(newarr);
+            
+      }
+      })  
+  })
 
 module.exports = router ;
