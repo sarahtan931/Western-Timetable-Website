@@ -12,11 +12,12 @@ export class CreateListComponent implements OnInit {
   @Input() list: List;
   lists : List[];
   email:String;
-  username: String;
+  name: String;
   description: String;
   hidden: Boolean;
   msg: String;
   isChecked: Boolean;
+
 
   constructor(private courseService: CoursesService) { }
 
@@ -26,7 +27,7 @@ export class CreateListComponent implements OnInit {
   onSubmit(f: NgForm) {
     console.log("boolean", f.value.isChecked)
     this.email = localStorage.getItem('email')
-    this.username = localStorage.getItem('name')
+    this.name = localStorage.getItem('name')
     
     var id1 = (<HTMLInputElement>document.getElementById('id1')).value;
     var code1 = (<HTMLInputElement>document.getElementById('code1')).value;
@@ -48,7 +49,7 @@ export class CreateListComponent implements OnInit {
     var code = code1 + " " + code2 + " " + code3 + " " + code4 + " " + code5;
     var code = code.trim()
 
-    this.courseService.createList(f.value.name, this.username, f.value.description, this.email, code, id, !f.value.isChecked).subscribe({
+    this.courseService.createList(f.value.name, this.name, f.value.description, this.email, code, id, !f.value.isChecked).subscribe({
       next: data => {
         this.msg = " Created Succesfully"
       },

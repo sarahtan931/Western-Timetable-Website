@@ -1,10 +1,11 @@
 <body>
-    <div class="background2">
-      <div class='show'>
+  <div class="background2">
+    <div class='show'>
       <div>{{title}}'s Course Lists</div>
-      <div ng-if="msg">{{msg}}</div>
-    <button (click)="showLists()">Show Course Lists</button>
-    <button (click)="toggleShow()">Expand Course Lists</button>
+          <div ng-if="msg">{{msg}}
+          </div>
+          <button (click)="showLists()">Show Course Lists</button>
+          <button (click)="toggleShow()">Expand Course Lists</button>
             <div class='all' *ngFor="let l of list;">
               Timetable Name: {{l?.name}}<Br>
               Owner of Timetable: {{l?.owner}}<Br>
@@ -13,15 +14,19 @@
               Hidden: {{l?.hidden}} <br>
                 <button (click)="delList(l.name)">Delete List</button>
                 <button (click)="showtimetable(l.name)">Show Timetable</button>
-              <div class='more' *ngIf="isShown">
+                <button (click)="hidetimetable()">Hide Timetable</button>
+                <button (click)="toggleUpdate(l.name, l.owner)">Update</button>
+                <button (click)="hideupdate()">Hide Update</button>
+            <div class='more' *ngIf="isShown">
               Description: {{l?.description}}<br>
-            <div class='course' *ngFor= "let t of l.timetables">
+
+              <div class='course' *ngFor= "let t of l.timetables">
               {{t.catalog_nbr}} {{t?.classname}} 
-            </div>
+              </div>
           </div> 
         </div>
       </div>
-      <div class='tbox'>
+      <div class='tbox' *ngIf='isTimetable' >
         <div class='timetable' *ngFor="let t of timetable">
             <Strong> {{t?.subject}} {{t?.catalog_nbr}}</Strong>
            {{t?.classname}} <br>
@@ -32,12 +37,33 @@
            {{t?.start_time}}<br>
            {{t?.end_time}}<br>
            {{t?.campus}}<br>
-           {{t?.days}}
-           
+           {{t?.days}} 
         </div>
       </div>
-    </div>
 
-   
+      <div class='update' class='tbox' *ngIf='isUpdate'>
+        <div class="err" ng-if="msg">{{msg}}</div>
+        Name of Timetable: {{name}}  <br>
+        Name of Owner: {{owner}}
+
+        <form #f="ngForm" (ngSubmit)="submit(f)">
+          <input [(ngModel)]="description" name="description" placeholder='Description of Schedule'> <br>
+          Public: <input type="checkbox" name="isChecked" [(ngModel)]="isChecked"> <br>
+          <input [(ngModel)]="code1"  id="code1" name="code1" placeholder="Input Subject Code">
+              <input [(ngModel)]="id1" id="id1" name='id1' placeholder="Input Subject ID"> <br><br>
+              <input [(ngModel)]="code2" id="code2" name="code2" placeholder="Input Subject Code">
+              <input  [(ngModel)]="id2" id="id2" name='id2' placeholder="Input Subject ID"> <br><br>
+              <input [(ngModel)]="code3" id="code3" name="code3" placeholder="Input Subject Code">
+              <input  [(ngModel)]="id3" id="id3" name='id3' placeholder="Input Subject ID"> <br><br>
+              <input [(ngModel)]="code4" id="code4" name="code4" placeholder="Input Subject Code">
+              <input  [(ngModel)]="id4" id="id4" name='id4' placeholder="Input Subject ID"> <br><br>
+              <input [(ngModel)]="code5" id="code5" name="code5" placeholder="Input Subject Code">
+              <input  [(ngModel)]="id5" id="id5" name='id5' placeholder="Input Subject ID"> <br><br>
+          <button>Create</button>
+      </form>
+      </div>
+     
+  </div>
+
 
 </body>

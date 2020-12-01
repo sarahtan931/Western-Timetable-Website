@@ -10,7 +10,6 @@ import {catchError} from 'rxjs/operators';
 export class CoursesService {
    url:string = `http://${window.location.hostname}:3000/api/courses/`
    newurl:string = `http://${window.location.hostname}:3000/api/`
-  
 
   constructor(private http:HttpClient) {}
 
@@ -84,8 +83,9 @@ showTimetable(name: string): Observable<Schedule[]>{
   );
 }
 
-showTimetableAuth(name: string): Observable<Schedule[]>{
-  let link = `${this.newurl}auth/schedule/find/${name}`
+showTimetableAuth(name: string, email): Observable<Schedule[]>{
+  console.log(name)
+  let link = `${this.newurl}auth/schedule/find/${name}/${email}`
   return this.http.get<Schedule[]>(link).pipe(
     catchError(this.handleError)
   );
@@ -157,6 +157,22 @@ createList(name, owner, description, owneremail, courseId, courseNum, hidden): O
   
   return this.http.post<List>(link, body, this.httpOptions)
   .pipe(catchError(this.handleError))
+}
+
+updateList(name, email, description, courseId, courseNum, hidden): Observable<List>{
+  let link = `${this.newurl}auth/updateschedule/`
+  let body = {
+    "name": name,
+    "description": description,
+    "email": email,
+    "courseId": courseId,
+    "courseNum": courseNum,
+    "hidden": hidden
+  }
+  console.log(body)
+  return this.http.put<List>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  )
 }
 
 //handling errors

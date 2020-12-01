@@ -152,20 +152,21 @@ router.put('/updateschedule',  passport.authenticate('jwt', { session: false }),
     let courseId = req.body.courseId;
     let description = req.body.description;
     let hidden = req.body.hidden;
+    let email = req.body.email;
 
     let numArr = courseNum.split(" ");
     let idArr = courseId.split(" ");
     let arr = []
+    console.log(numArr)
 
-    Timetable.findOne(({"name": name}), function (err, timetable) {
+    Timetable.findOne(({"name": name, "email": email}), function (err, timetable) {
         if (err || !timetable || timetable.length <= 0){ 
             res.status(404).send(`not found`);
         }
          else{ 
-            for (let i = 0; i < numArr.length; i++){ 
-                    //only allowing the user to enter a valid timetable   
-                if(numArr[i] != "" && idArr[i] !="" && newdata.find(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])){
-                   const data = newdata.filter(p => p.subject === idArr[i] && p.catalog_nbr === numArr[i])
+            for (let i = 0; i < numArr.length; i++){   
+                if(numArr[i] != "" && idArr[i] !="" && newdata.find(p => p.subject === idArr[i] && p.catalog_nbr.toString() === numArr[i])){
+                   const data = newdata.filter(p => p.subject === idArr[i] && p.catalog_nbr.toString() === numArr[i])
                    data.map(function(e){
                        arr.push({
                         "classname": e.className,
@@ -182,7 +183,6 @@ router.put('/updateschedule',  passport.authenticate('jwt', { session: false }),
                        })
                 }
             }   
-           
             timetable.timetable = arr;
             timetable.description = description;
             timetable.hidden = hidden;
@@ -209,11 +209,12 @@ router.delete('/dellist/:email/:name',  passport.authenticate('jwt', { session: 
 })
 
 //showing timetables
-router.get('/schedule/find/:sched', passport.authenticate('jwt', { session: false }),(req, res) =>{
+router.get('/schedule/find/:sched/:email', passport.authenticate('jwt', { session: false }),(req, res) =>{
     name = req.params.sched
+    email = req.params.email
     let newarr = []
-  
-  Timetable.findOne(({"name": name}), function (err, list) {
+
+  Timetable.findOne(({"name": name, "email": email}), function (err, list) {
     if (err || !list || list.length <= 0 || list.timetable.length <= 0){
         res.status(404).send(`not found`);
     }
@@ -234,8 +235,7 @@ router.get('/schedule/find/:sched', passport.authenticate('jwt', { session: fals
                 'days': list.timetable[i].days
                 });
             }
-        res.send(newarr);
-            
+        res.send(newarr);    
       }
       })  
   })

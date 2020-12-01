@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CoursesService } from '../../services/courses.service';
 import { Course, List, Schedule } from '../../Models/Course';
+import {NgForm} from '@angular/forms';
 
 
 @Component({
@@ -16,6 +17,11 @@ export class ShowUserListComponent implements OnInit {
   email: String;
   title: String;
   msg: String;
+  isTimetable: boolean = false;
+  isUpdate: boolean = false;
+  owner: String;
+  name: String;
+  listname: String;
 
   constructor(private courseServices: CoursesService) { }
 
@@ -59,8 +65,27 @@ export class ShowUserListComponent implements OnInit {
     this.isShown = ! this.isShown;
   }
 
+  hidetimetable(){
+    this.isTimetable = false;
+  }
+
+  hideupdate(){
+    this.isUpdate= false;
+  }
+  
+  toggleUpdate(name, owner){
+    this.isUpdate = true;
+    console.log("name" + name)
+    console.log("owner"+ owner)
+    this.listname = name;
+    this.owner = owner;
+  }
+
   showtimetable(name){
-    this.courseServices.showTimetableAuth(name).subscribe({
+    this.isTimetable = true;
+    console.log(name)
+    this.email = localStorage.getItem('email')
+    this.courseServices.showTimetableAuth(name, this.email).subscribe({
       next: data => {
         this.timetable = data
         console.log(data)
@@ -72,6 +97,27 @@ export class ShowUserListComponent implements OnInit {
       }
     })
   }
- 
+
+  submit(f: NgForm) {
+    console.log("boolean", f.value.isChecked)
+    this.name = localStorage.getItem('name')
+    
+    var code = f.value.id1 + " " + f.value.id2 + " " + f.value.id3 + " " + f.value.id4 + " " + f.value.id5;
+   
+    var id = f.value.code1 + " " + f.value.code2 + " " + f.value.code3 + " " + f.value.code4 + " " + f.value.code5;
+    var code = code.trim()
+    var id = id.trim()
+
+    this.courseServices.updateList(this.listname, this.email, f.value.description, id, code, !f.value.isChecked).subscribe({
+      next: data => {
+        this.msg = " Created Succesfully"
+      },
+      error: error=> {
+        this.msg = error;
+        console.log('error', error);
+        this.msg = " Please enter a valid input";
+      }
+    })
+  }
 
 }
