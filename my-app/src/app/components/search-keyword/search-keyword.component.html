@@ -4,9 +4,9 @@
 
 <body>
 <div class="background2">
-  <div>Search Timetable by Keyword</div>
+  <div>Search courses by keyword</div>
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-        <input [(ngModel)]="keyword" name="keyword">
+        <input [(ngModel)]="keyword" name="keyword" placeholder="keyword">
         <button>Submit</button>
       </form>
 

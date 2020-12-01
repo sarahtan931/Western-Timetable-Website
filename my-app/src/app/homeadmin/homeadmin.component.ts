@@ -18,7 +18,7 @@ export class HomeadminComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.name = localStorage.getItem('email')
+    this.name = localStorage.getItem('name')
     console.log(this.name)
   }
 

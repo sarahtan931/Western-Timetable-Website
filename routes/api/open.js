@@ -216,7 +216,7 @@ router.get('/findbyboth/:subject/:catalog_nbr/', (req,res) =>{
     //if there is no component specified search for subject and coursenum
     else if (newdata.find(p => p.subject.includes(subject) &&  p.catalog_nbr.toString().includes(courseNum))){
         const data = newdata.filter(p => p.subject.includes(subject) &&  p.catalog_nbr.toString().includes(courseNum))
-        Review.find(({"subject": subject,"catalog_nbr": courseNum, "hidden": false}), function (err, review) 
+        Review.find(({"subject": subject,"catalog_nbr": data[0].catalog_nbr, "hidden": false}), function (err, review) 
         { review.map(function(e) {
               newarr.push({
               "name": e.name,
@@ -304,7 +304,7 @@ router.get('/findbynum/:catalog_nbr/', (req,res) =>{
   //if there is no component specified search for subject and coursenum
   else if (newdata.find(p => p.catalog_nbr.toString().includes(courseNum))){
       const data = newdata.filter(p => p.catalog_nbr.toString().includes(courseNum))
-      Review.find(({"catalog_nbr": courseNum, "hidden": false}), function (err, review) 
+      Review.find(({"catalog_nbr": data[0].catalog_nbr, "hidden": false}), function (err, review) 
       { review.map(function(e) {
             newarr.push({
             "name": e.name,

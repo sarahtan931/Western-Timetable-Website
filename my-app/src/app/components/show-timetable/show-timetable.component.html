@@ -1,4 +1,3 @@
-<p>show-timetable works!</p>
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
@@ -6,9 +5,8 @@
 <body>
 <div class="background2">
   <div>Show Timetable for a given course list</div>
-  <p>Please enter a course list name</p>
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-    <input [(ngModel)]="name" name="name">
+    <input [(ngModel)]="name" name="name" placeholder="Course List">
     <button>Submit</button>
   </form>
   <div class="err" ng-if="errorMessage">{{ errorMessage }}{{msg}}</div>
@@ -18,15 +16,15 @@
           <td>
           <Strong> {{t?.subject}} {{t?.catalog_nbr}}
          </Strong>
-         {{t?.classname}}
-         {{t?.class_section}}
-         {{t?.ssr_component}}
-         {{t?.descrlong}}
-         {{t?.class_section}}
-         {{t?.start_time}}
-         {{t?.end_time}}
-         {{t?.campus}}
-         {{t?.days}}
+         <strong>Class Name: </strong>{{t?.classname}}<br>
+        <strong>Class Section: </strong> {{t?.class_section}} <br>
+        <strong>SSR_Component</strong> {{t?.ssr_component}} <Br>
+         <strong>Class Section</strong>  {{t?.class_section}} <br>
+        <strong>Time</strong> {{t?.start_time}} 
+         {{t?.end_time}} <Br>
+        <strong>Campus:</strong> {{t?.campus}} <br>
+         <strong>Days: </strong>{{t?.days}} <br>
+         {{t?.descrlong}} <Br>
         </td> 
         </tr>
     </tbody>

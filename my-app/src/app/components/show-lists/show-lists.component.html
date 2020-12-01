@@ -1,4 +1,3 @@
-<p>show-lists works!</p>
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
@@ -11,13 +10,13 @@
 
 
         <div class='all' *ngFor="let l of list;">
-          {{l?.name}}<Br>
-          {{l?.owner}}<Br>
-          {{l?.date}}<Br>
-          Number of courses: {{l?.courses}}<Br>
+          <strong>Course List Name: </strong>{{l?.name}}<Br>
+         <strong>Owner: </strong> {{l?.owner}}<Br>
+          <strong>Date Created: </strong>{{l?.date}}<Br>
+         <Strong> Number of courses:</Strong> {{l?.courses}}<Br>
 
           <div class='more' *ngIf="isShown">
-          Description: {{l?.description}}<br>
+         <strong>Description:</strong>  {{l?.description}}<br>
         <div class='course' *ngFor= "let t of l.timetables">
           {{t.catalog_nbr}} {{t?.classname}} 
         </div>

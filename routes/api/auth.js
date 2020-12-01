@@ -11,7 +11,7 @@ const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
 
 //show all the users schedules
-router.get('/showschedule/:email', (req, res) =>{
+router.get('/showschedule/:email', passport.authenticate('jwt', { session: false }), (req, res) =>{
     let newarr = []
     email = req.params.email;
     Timetable.find(({"email": email}), function (err, review) {
@@ -36,7 +36,7 @@ router.get('/showschedule/:email', (req, res) =>{
 })
 
 //make a review
-router.post('/makereview', (req, res)=>{
+router.post('/makereview',  passport.authenticate('jwt', { session: false }),(req, res)=>{
     let subject = req.body.subject;
     let catalog_nbr = req.body.catalog_nbr;
     var err = validationResult(req);
@@ -68,7 +68,7 @@ router.post('/makereview', (req, res)=>{
 router.post('/makeschedule', [
     check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
     check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
-    ], (req, res)=>{
+    ], passport.authenticate('jwt', { session: false }), (req, res)=>{
     var err = validationResult(req);
     if (!err.isEmpty()) {
         console.log(err.mapped())
@@ -142,7 +142,7 @@ router.post('/makeschedule', [
 })
 
 //update existing schedule
-router.put('/updateschedule', [
+router.put('/updateschedule',  passport.authenticate('jwt', { session: false }),[
     check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
     check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
     ], (req, res)=>{
@@ -193,7 +193,7 @@ router.put('/updateschedule', [
         })
 }) 
 
-router.delete('/dellist/:email/:name', (req, res) =>{
+router.delete('/dellist/:email/:name',  passport.authenticate('jwt', { session: false }),(req, res) =>{
     const name = req.params.name;
     const email = req.params.email;
     Timetable.findOne(({"email":email,"name": name}), function (err, timetable) {
@@ -209,7 +209,7 @@ router.delete('/dellist/:email/:name', (req, res) =>{
 })
 
 //showing timetables
-router.get('/schedule/find/:sched',(req, res) =>{
+router.get('/schedule/find/:sched', passport.authenticate('jwt', { session: false }),(req, res) =>{
     name = req.params.sched
     let newarr = []
   

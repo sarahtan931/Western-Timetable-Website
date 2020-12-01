@@ -1,6 +1,14 @@
-<p>Welcome to the Timetable Website</p>
-<app-search-keyword></app-search-keyword>
-<app-show-lists></app-show-lists>
-<app-search-course></app-search-course>
+<h1>Welcome to the Timetable Website</h1>
+<p>The Timetable website is a web application that provides the functionality of the current online
+    timetable at Western. This application provides users the ability to cereate an account, 
+    save and edits lists of courses for logged in users, ability to publish these lists as well 
+    as the ability to add and save comments.
+</p>
+<button class='button1' (click)="login()">Log In</button>
+<button class='button2' (click)="register()">Register</button>
+
+<app-search-keyword class='keyword'></app-search-keyword>
+<app-show-lists class='list'></app-show-lists>
+<app-search-course class='search'></app-search-course>
 <app-show-timetable></app-show-timetable>
 

@@ -30,7 +30,6 @@ export class ShowListsComponent implements OnInit {
     this.isShown = ! this.isShown;
     }
 
- 
   }
 
 

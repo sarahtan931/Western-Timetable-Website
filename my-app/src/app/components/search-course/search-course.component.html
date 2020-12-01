@@ -3,10 +3,10 @@
 
 <body>
 <div class="background3">
- <div>Search Timetable by <strong>Subject and Course</strong> </div>
+ <div>Search Timetable</div>
  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-    <input [(ngModel)]="subject" name="subject" placeholder='subject'>
-    <input [(ngModel)]="courseNum" name="courseNum" placeholder='coursenum'>
+    <input [(ngModel)]="subject" name="subject" placeholder='Subject'>
+    <input [(ngModel)]="courseNum" name="courseNum" placeholder='Course Number'>
     <button>Submit</button>
   </form>
   
@@ -16,22 +16,19 @@
     <Strong> {{c?.subject}} {{c?.catalog_nbr}}</Strong><br>
             Class Section: {{c?.class_section}} <br>
             Component: {{c?.ssr_component}}
-            {{c?.catalog_nbr}}
-           
-
-    <button (click)="toggleShow()">Show More</button>
-      
+    <button (click)="toggleShow()">Show More</button>   
     <div *ngIf="isShown">
       <div class='more'>
-        {{c?.descrlong}} <br>
-       Time:  {{c?.start_time}}
-        {{c?.end_time}}
+       <strong>Time:</strong>  {{c?.start_time}}{{c?.end_time}} <br>
+       <strong>Campus: </strong> {{c?.campus}} <br>
+       <strong>Days: </strong> {{c?.days}} <Br>
+        <strong>Description:</strong>  {{c?.descrlong}} <br>
       </div>
     <div class='review' *ngFor="let c of course; let r of c.reviews">
-        Review: {{ r.review }} <br>
-        Rating:  {{ r.rating }} <br>
-       Creater:  {{ r.name }} <br>
-        Date: {{ r.date }}
+       <Strong>Review:</Strong>  {{ r.review }} <br>
+        <strong>Rating: </strong> {{ r.rating }} <br>
+      <strong>Creater:</strong>   {{ r.name }} <br>
+      <strong>Date:</strong>   {{ r.date }}
     </div>
     
   </div>

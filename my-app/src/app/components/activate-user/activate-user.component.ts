@@ -12,6 +12,7 @@ export class ActivateUserComponent implements OnInit {
   user: User;
  msg: String;
  activemsg: String;
+ msgcomplete: String;
 
   constructor(private authService: AuthService) { }
 
@@ -29,23 +30,34 @@ export class ActivateUserComponent implements OnInit {
   }
 
   setActive(email){
+    this.msg = ""
+    this.msgcomplete = ""
     this.authService.setActive(email).subscribe({
       next: data => {
         this.user = data;
-        this.showUsers();
+        this.msgcomplete = "Succesfully set user to active";
+        setTimeout(()=>{                     
+          this.showUsers();
+        }, 500);
+       
       },
       error: error=> {
-        this.msg = error;
         this.msg = "User is already active";
       }
     })
   }
 
   setDeActive(email){
+    this.msg = ""
+    this.msgcomplete = ""
     this.authService.setDeActive(email).subscribe({
       next: data => {
         this.user = data;
-        this.showUsers();
+        this.msgcomplete = "Succesfully set user to deactive";
+        setTimeout(()=>{                     
+          this.showUsers();
+        }, 500);
+
       },
       error: error=> {
         this.msg = "User is already deactived";
@@ -54,13 +66,18 @@ export class ActivateUserComponent implements OnInit {
   }
 
   setAdmin(email){
+    this.msg = ""
+    this.msgcomplete = ""
     this.authService.setAdmin(email).subscribe({
       next: data => {
         this.user = data;
-        this.showUsers();
+        this.msgcomplete = "Succesfully set user to admin";
+        setTimeout(()=>{                     
+          this.showUsers();
+        }, 500);
+
       },
       error: error=> {
-        this.msg = error;
         this.msg = "User is already an Admin";
       }
     })

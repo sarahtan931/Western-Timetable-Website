@@ -18,15 +18,23 @@ export class HideReviewComponent implements OnInit {
   constructor(private courseServices: CoursesService) { }
 
   ngOnInit(): void {
+    this.courseServices.getReviews().subscribe({
+      next: data => {
+        this.review = data;
+      },
+      error: error=> {
+        this.msg = error;
+        this.msg = "Please enter a valid course.";
+        console.log('error', error)
+      }}
+      )
   }
 
   showReviews(){
     this.msg = "";
     this.courseServices.getReviews().subscribe({
-    //  l => this.review = l
     next: data => {
       this.review = data;
-      //console.log(this.review)
     },
     error: error=> {
       this.msg = error;
@@ -43,7 +51,10 @@ export class HideReviewComponent implements OnInit {
     this.courseServices.toggleReview(id).subscribe(
       l => this.newReview = l
     )
-    this.showReviews();
+    setTimeout(()=>{                     
+      this.showReviews();
+    }, 500);
+   
    
     this.msg = "Succesfully toggled review."
   }

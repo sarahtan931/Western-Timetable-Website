@@ -40,6 +40,10 @@ export class ShowUserListComponent implements OnInit {
           this.dellist = data
           console.log(data)
           this.msg = "Succesfully deleted list"
+          setTimeout(()=>{                     
+            this.showLists();
+          }, 500);
+  
         },
         error: error=> {
          
@@ -53,7 +57,7 @@ export class ShowUserListComponent implements OnInit {
 
   toggleShow() {
     this.isShown = ! this.isShown;
-    }
+  }
 
   showtimetable(name){
     this.courseServices.showTimetableAuth(name).subscribe({

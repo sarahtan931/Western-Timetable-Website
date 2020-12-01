@@ -1,20 +1,20 @@
-<p>hide-review works!</p>
+
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
 
 <body>
 <div class="background2">
-  <div>Reviews</div>
+  <h1>Reviews</h1>
   <div class="err" ng-if="msg">{{msg}}</div>
-<button (click)="showReviews()">Show Reviews</button>
+<button class='show' (click)="showReviews()">Refresh Reviews</button>
     <div class='all' *ngFor="let r of review;">
-     <p id='review'> Review ID:  {{r?.reviewID}} </p>
-      Subject:  {{r?.subject}} {{r?.catalog_nbr}} <br>
-      Hidden:  {{r?.hidden}} <br>
-      Rating:  {{r?.rating}} <br>
-      Review: {{r?.review}}<Br> 
-      Date Created: {{r?.date}} <br>
+     <strong>Review ID:  {{r?.reviewID}}</strong> <br>
+     <strong>Subject: </strong>  {{r?.subject}} {{r?.catalog_nbr}} <br>
+      <strong>Hidden:</strong>  {{r?.hidden}} <br>
+     <strong>Rating:</strong>   {{r?.rating}} <br>
+     <strong>Review:</strong>  {{r?.review}}<Br> 
+      <strong>Date Created:</strong> {{r?.date}} <br>
       <button (click)="toggle(r.reviewID, r.hidden)"> Toggle Hidden Property</button>
       
 </div>

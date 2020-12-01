@@ -1,6 +1,6 @@
-<p>show-user-list works!</p>
 <body>
     <div class="background2">
+      <div class='show'>
       <div>{{title}}'s Course Lists</div>
       <div ng-if="msg">{{msg}}</div>
     <button (click)="showLists()">Show Course Lists</button>
@@ -9,7 +9,7 @@
               Timetable Name: {{l?.name}}<Br>
               Owner of Timetable: {{l?.owner}}<Br>
               Date Created: {{l?.date}}<Br>
-              Number of courses: {{l?.courses}}<Br>
+              Number of courses: {{l?.timetables.length}}<Br>
               Hidden: {{l?.hidden}} <br>
                 <button (click)="delList(l.name)">Delete List</button>
                 <button (click)="showtimetable(l.name)">Show Timetable</button>
@@ -20,20 +20,21 @@
             </div>
           </div> 
         </div>
+      </div>
+      <div class='tbox'>
         <div class='timetable' *ngFor="let t of timetable">
-            <div>
-            <Strong> {{t?.subject}} {{t?.catalog_nbr}}
-           </Strong>
-           {{t?.classname}}
-           {{t?.class_section}}
-           {{t?.ssr_component}}
-           {{t?.descrlong}}
-           {{t?.class_section}}
-           {{t?.start_time}}
-           {{t?.end_time}}
-           {{t?.campus}}
+            <Strong> {{t?.subject}} {{t?.catalog_nbr}}</Strong>
+           {{t?.classname}} <br>
+           {{t?.class_section}} <br>
+           {{t?.ssr_component}}<br>
+           {{t?.descrlong}}<br>
+           {{t?.class_section}}<br>
+           {{t?.start_time}}<br>
+           {{t?.end_time}}<br>
+           {{t?.campus}}<br>
            {{t?.days}}
-          </div> 
+           
+        </div>
       </div>
     </div>
 

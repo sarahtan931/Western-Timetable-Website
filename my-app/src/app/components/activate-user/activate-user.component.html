@@ -1,19 +1,20 @@
-<p>activate-user works!</p>
 
 <body>
     <div class="background2">
-      <div>Users</div>
-      <div  ng-if="msg">{{msg}}</div>
+      <h1>Users</h1>
+      <div class='msg' ng-if="msg">{{msg}}</div>
+      <div class='msgcomplete' ng-if="msgcomplete">{{msgcomplete}}</div>
     <button (click)="showUsers()">Refresh Users</button>
     <div class='user' *ngFor="let u of userArray">
-        {{u?.name}} <br>
-        {{u?.email}} <br>
-        {{u?.role}} <br>
-        {{u?.active}} <br>
+      <div *ngIf="u?.email == 'graeme@gmail.com'"> <strong>Master Administrator</strong></div>
+        <strong>Name:</strong> {{u?.name}} <br>
+        <strong>Email: </strong>{{u?.email}} <br>
+        <strong>Role:</strong> {{u?.role}} <br>
+        <strong>Active</strong>: {{u?.active}} <br>
 
-        <button (click)="setActive(u.email)">Set user as actived</button>
-        <button (click)="setDeActive(u.email)">Set user as deactivated</button>
-        <button (click)="setAdmin(u.email)">Give admin privileges</button>
+        <button *ngIf="u?.email != 'graeme@gmail.com'" (click)="setActive(u.email)">Set user as actived</button>
+        <button *ngIf="u?.email != 'graeme@gmail.com'" (click)="setDeActive(u.email)">Set user as deactivated</button>
+        <button *ngIf="u?.email != 'graeme@gmail.com'" (click)="setAdmin(u.email)">Give admin privileges</button>
     </div>
     
     </div>

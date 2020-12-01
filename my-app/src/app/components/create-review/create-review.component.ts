@@ -27,13 +27,14 @@ export class CreateReviewComponent implements OnInit {
 
   onSubmit(f: NgForm) {
     this.msg = "";
+    this.newmsg = "";
     this.name = localStorage.getItem('name');
     this.courseService.createReview(this.name, f.value.subject, f.value.catalog_nbr, f.value.review, f.value.rating ).subscribe({
       next: data => {
         this.newreview = data;
         console.log(data.review)
         this.msg = " Created Review Succesfully";
-        this.newmsg = data.review.toString() + data.rating.toString();
+        this.newmsg = data.subject +" "+ data.catalog_nbr + " Review: " + data.review.toString() +" Rating: "+ data.rating.toString();
       },
       error: error=> {
         this.msg = error;
