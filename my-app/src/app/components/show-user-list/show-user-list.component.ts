@@ -44,7 +44,7 @@ export class ShowUserListComponent implements OnInit {
       {
         next: data => {
           this.dellist = data
-          console.log(data)
+          //console.log(data)
           this.msg = "Succesfully deleted list"
           setTimeout(()=>{                     
             this.showLists();
@@ -75,15 +75,13 @@ export class ShowUserListComponent implements OnInit {
   
   toggleUpdate(name, owner){
     this.isUpdate = true;
-    console.log("name" + name)
-    console.log("owner"+ owner)
     this.listname = name;
     this.owner = owner;
   }
 
   showtimetable(name){
     this.isTimetable = true;
-    console.log(name)
+    //console.log(name)
     this.email = localStorage.getItem('email')
     this.courseServices.showTimetableAuth(name, this.email).subscribe({
       next: data => {
@@ -101,16 +99,38 @@ export class ShowUserListComponent implements OnInit {
   submit(f: NgForm) {
     console.log("boolean", f.value.isChecked)
     this.name = localStorage.getItem('name')
-    
-    var code = f.value.id1 + " " + f.value.id2 + " " + f.value.id3 + " " + f.value.id4 + " " + f.value.id5;
-   
-    var id = f.value.code1 + " " + f.value.code2 + " " + f.value.code3 + " " + f.value.code4 + " " + f.value.code5;
+
+    var id11 = (<HTMLInputElement>document.getElementById('id11')).value;
+    var code11 = (<HTMLInputElement>document.getElementById('code11')).value;
+
+    var id12 = (<HTMLInputElement>document.getElementById('id12')).value;
+    var code12 = (<HTMLInputElement>document.getElementById('code12')).value;
+
+    var id13 = (<HTMLInputElement>document.getElementById('id13')).value;
+    var code13 = (<HTMLInputElement>document.getElementById('code13')).value;
+
+    var id14 = (<HTMLInputElement>document.getElementById('id14')).value;
+    var code14 = (<HTMLInputElement>document.getElementById('code14')).value;
+
+    var id15 = (<HTMLInputElement>document.getElementById('id15')).value;
+    var code15 = (<HTMLInputElement>document.getElementById('code15')).value;
+
+    var code = id11 + " " + id12 + " " + id13 + " " + id14 + " " + id15;
+    var id = code11 + " " + code12 + " " + code13 + " " + code14 + " " + code15;
+  
     var code = code.trim()
     var id = id.trim()
+    console.log(code)
+    console.log(id)
 
     this.courseServices.updateList(this.listname, this.email, f.value.description, id, code, !f.value.isChecked).subscribe({
       next: data => {
         this.msg = " Created Succesfully"
+        setTimeout(()=>{                     
+          this.showLists();
+        }, 500);
+        
+        this.isUpdate= false;
       },
       error: error=> {
         this.msg = error;

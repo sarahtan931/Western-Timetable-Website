@@ -19,6 +19,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  home(){
+    this.router.navigateByUrl('/home')
+  }
+
   onSubmit(f: NgForm){
     this.errorMessage = "";
     if (!f.value.email){

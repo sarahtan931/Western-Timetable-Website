@@ -10,3 +10,7 @@
     left: 2%;
     top: 140%; 
 }
+
+.err{
+    background-color: rgb(247, 184, 196);
+}

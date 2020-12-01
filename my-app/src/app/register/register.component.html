@@ -1,8 +1,9 @@
-<p>register works!</p>
+
+<button class='home' (click)="home()">Home</button>
 
 <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <div class="container">
-      <label for="username">Username</label>
+      <label for="username">First Name</label>
       <input [(ngModel)]="username" name='username' type='username' placeholder="Enter Username">
 
       <label for="email"><b>Email</b></label>

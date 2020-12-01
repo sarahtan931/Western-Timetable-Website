@@ -5,7 +5,6 @@ const {check , validationResult}  = require('express-validator');
 const fs = require('fs');
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
 var newdata=JSON.parse(data);
-
 const Timetable = mongoose.model('Timetables');
 const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
@@ -19,7 +18,7 @@ router.get('/showschedule/:email', passport.authenticate('jwt', { session: false
             res.status(404).send(`not found`);
         }
         else {
-              let arr = review.map(function(e) {
+              review.map(function(e) {
                  newarr.push({
                     "owner": e.owner,
                     "name": e.name,
@@ -36,7 +35,10 @@ router.get('/showschedule/:email', passport.authenticate('jwt', { session: false
 })
 
 //make a review
-router.post('/makereview',  passport.authenticate('jwt', { session: false }),(req, res)=>{
+router.post('/makereview', passport.authenticate('jwt', { session: false }),[
+    check('review').isLength({ min: 1, max:200 }).escape(),
+    check('rating').isNumeric().isLength({min: 0, max:1})
+],(req, res)=>{
     let subject = req.body.subject;
     let catalog_nbr = req.body.catalog_nbr;
     var err = validationResult(req);
@@ -67,7 +69,8 @@ router.post('/makereview',  passport.authenticate('jwt', { session: false }),(re
 //creates new schedule
 router.post('/makeschedule', [
     check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
-    check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
+    check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
+    check('description').isLength({ min: 0, max:100 }).escape()
     ], passport.authenticate('jwt', { session: false }), (req, res)=>{
     var err = validationResult(req);
     if (!err.isEmpty()) {
@@ -75,8 +78,8 @@ router.post('/makeschedule', [
         res.status(404).send(`Not valid input`);
     } else {
         console.log(req.body)
-        let courseNum = req.body.courseNum;
-        let courseId = req.body.courseId;
+        let courseNum = req.body.courseNum.toUpperCase();
+        let courseId = req.body.courseId.toUpperCase();
         let name = req.body.name;
         let owner = req.body.owner;
         let email = req.body.email
@@ -144,12 +147,13 @@ router.post('/makeschedule', [
 //update existing schedule
 router.put('/updateschedule',  passport.authenticate('jwt', { session: false }),[
     check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
-    check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
+    check('owner').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape(),
+    check('description').isLength({ min: 0, max:100 }).escape()
     ], (req, res)=>{
     var err = validationResult(req);
     let name = req.body.name;
-    let courseNum = req.body.courseNum;
-    let courseId = req.body.courseId;
+    let courseNum = req.body.courseNum.toUpperCase();
+    let courseId = req.body.courseId.toUpperCase();
     let description = req.body.description;
     let hidden = req.body.hidden;
     let email = req.body.email;
@@ -160,7 +164,7 @@ router.put('/updateschedule',  passport.authenticate('jwt', { session: false }),
     console.log(numArr)
 
     Timetable.findOne(({"name": name, "email": email}), function (err, timetable) {
-        if (err || !timetable || timetable.length <= 0){ 
+        if (err || !timetable || timetable.length <= 0 || courseNum.length < 0 || courseId.length < 0 ){ 
             res.status(404).send(`not found`);
         }
          else{ 
@@ -182,17 +186,21 @@ router.put('/updateschedule',  passport.authenticate('jwt', { session: false }),
                        });
                        })
                 }
+                else{
+                    res.status(404).send(`Please enter a valid timetable input`);
+                    return;
+                }
             }   
             timetable.timetable = arr;
             timetable.description = description;
             timetable.hidden = hidden;
-
             timetable.save() 
             res.send(timetable) 
             }  
         })
 }) 
 
+//delete a certain timetable
 router.delete('/dellist/:email/:name',  passport.authenticate('jwt', { session: false }),(req, res) =>{
     const name = req.params.name;
     const email = req.params.email;

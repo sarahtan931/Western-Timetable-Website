@@ -31,7 +31,7 @@ export class SearchKeywordComponent implements OnInit {
       },
       error: error=> {
         this.errorMessage = error;
-        this.msg = "Please enter a valid course.";
+        this.msg = "Please enter a valid keyword.";
         console.log('error', error)
       }
     })

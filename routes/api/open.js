@@ -13,12 +13,12 @@ const Users = mongoose.model('Users');
 const Timetable = mongoose.model('Timetables');
 const Review = mongoose.model('Review');
 
-//POST new user route (optional, everyone has access)
+//register a user
 router.post('/register', [
-  check("email").normalizeEmail().isEmail()
+  check("email").normalizeEmail().isEmail(),
+  check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
 ], (req, res, next) => {
   const { body: { user } } = req;
-  console.log(user)
   var err = validationResult(req);
   if (!err.isEmpty()) {
       res.status('404').send('please enter a valid email')
@@ -30,7 +30,6 @@ router.post('/register', [
     if (!user.email) {
       return res.status(422).send('Error')
     }
-  
     if(!user.password) {
       return res.status(422).send('Error');
     }
@@ -53,6 +52,7 @@ router.get('/auth/facebook', passport.authenticate('facebook'));
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', { successRedirect: '/',  failureRedirect: '/login' }));*/
 
+//method to log in 
 router.post('/login', (req, res, next) => {
  const { body: { user } } = req;
   if(!user.email) {
@@ -66,7 +66,7 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
      return res.status('404').send('Error')
     }
     if(passportUser.active == false){
-      return res.status(422).send(new Error('MEssage 2'))
+      return res.status(422).send(new Error('User is deactive'))
     }
     if(passportUser) {
       const user = passportUser;
@@ -77,13 +77,12 @@ return passport.authenticate('local', { session: false }, (err, passportUser, in
   })(req, res, next);
 });
 
-
 //search by keyword softmatch
 router.get('/searchkeyword/:keyword', (req, res) => {
   keyword = req.params.keyword;
   keyword = keyword.replace(/\s/g, '');
-  keyword = keyword.toString().toUpperCase();
-    if (keyword.length > 4 && (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5))){
+  keyword = keyword.toUpperCase();
+  if (keyword.length > 4 && (newdata.find(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5))){
       const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5)
       let arr = data.map(function(e){
         return{
@@ -108,28 +107,6 @@ router.get('/searchkeyword/:keyword', (req, res) => {
       else{   
         res.status(404).send(`not found`);
     }  
-})
-
-//showing all reviews
-router.get('/showreview/',(req, res) =>{
-  newarr = [];
-  Review.find(({"hidden": false}), function (err, review) {
-    if (err || !review ){
-      res.status(404).send(`not found`);
-    }
-    else {
-      let arr = review.map(function(e) {
-        newarr.push({
-        "reviewID": e.reviewID,
-        "subject": e.subject,
-        "catalog_nbr": e.catalog_nbr,
-        "review": e.review,
-        "rating": e.rating
-        })
-      })
-       res.send(newarr);
-      }    
-    })           
 })
 
 //shows all the lists
@@ -189,18 +166,7 @@ Timetable.findOne(({"name": name, "hidden":false}), function (err, list) {
     })  
 })
 
-router.get('/allcourses',(req, res) => {
-    array = []
-    let arr = newdata.map(function(e){
-        return{
-            subject: e.subject,
-            className: e.className,
-            course_info: e.course_info[0]  
-        }
-    })
-    res.send(arr)  
-})
-
+//searching by subject and catalog_nbr
 router.get('/findbyboth/:subject/:catalog_nbr/', (req,res) =>{
     let subject = req.params.subject;
     let courseNum = req.params.catalog_nbr;
@@ -250,6 +216,7 @@ router.get('/findbyboth/:subject/:catalog_nbr/', (req,res) =>{
 }
 )
 
+//searching by subject
 router.get('/findbysubject/:subject', (req,res) =>{
   let subject = req.params.subject;
   subject = subject.toUpperCase().toString();
@@ -292,6 +259,7 @@ router.get('/findbysubject/:subject', (req,res) =>{
 }
 )
 
+//searching by catalog_nbr
 router.get('/findbynum/:catalog_nbr/', (req,res) =>{
   let courseNum = req.params.catalog_nbr;
   courseNum = courseNum.toUpperCase().toString();

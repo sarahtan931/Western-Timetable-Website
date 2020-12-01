@@ -1,19 +1,13 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
-//const auth = require('../auth');
 const {check , validationResult}  = require('express-validator');
-const { nextTick } = require('process');
-const jwt_decode = require('jwt-decode');
 //importing models 
-const Timetable = mongoose.model('Timetables');
 const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
-const jwt = require('jsonwebtoken');
 
 //showing all users
 router.get('/showusers', passport.authenticate('jwt', { session: false }), (req, res) =>{
-    console.log(req.body.role)
     Users.find(function (err, user){
         if (err || !user){
             res.status(404).send(`not found`); 
@@ -25,7 +19,9 @@ router.get('/showusers', passport.authenticate('jwt', { session: false }), (req,
 })
 
 //update user to be of type admin
-router.put('/setadmin', passport.authenticate('jwt', { session: false }), (req, res)=>{
+router.put('/setadmin', passport.authenticate('jwt', { session: false }),[
+    check("email").normalizeEmail().isEmail() 
+], (req, res)=>{
     let email = req.body.email;
     Users.findOne(({"email": email}), function (err, user) {
         if (err || !user || user.role == "ADMIN"){ 
@@ -40,7 +36,9 @@ router.put('/setadmin', passport.authenticate('jwt', { session: false }), (req, 
 }) 
 
 //update user active status
-router.put('/setactive', passport.authenticate('jwt', { session: false }), (req, res)=>{
+router.put('/setactive', passport.authenticate('jwt', { session: false }),[
+    check("email").normalizeEmail().isEmail()  
+], (req, res)=>{
     let email = req.body.email;
     Users.findOne(({"email": email}), function (err, user) {
         if (err || !user || user.active == true){ 
@@ -55,9 +53,10 @@ router.put('/setactive', passport.authenticate('jwt', { session: false }), (req,
 }) 
 
 //update user active status
-router.put('/setdeactive', passport.authenticate('jwt', { session: false }), (req, res)=>{
+router.put('/setdeactive', passport.authenticate('jwt', { session: false }),[
+    check("email").normalizeEmail().isEmail() 
+], (req, res)=>{
      let email = req.body.email;
- 
      Users.findOne(({"email": email}), function (err, user) {
          if (err || !user || user.active == false){ 
              res.status(404).send(`User is already deactivated`);
@@ -71,7 +70,6 @@ router.put('/setdeactive', passport.authenticate('jwt', { session: false }), (re
  }) 
   
 router.get('/showreview', passport.authenticate('jwt', { session: false }), (req, res) =>{
-    //console.log(req.user)
     Review.find(function (err, review) {
         if (err || !review || review.length <= 0){
             res.status(404).send(`not found`);

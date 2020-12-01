@@ -85,7 +85,8 @@ register(username, email, password): Observable<User>{
     'password': password,
     'name': username
   },
-    'email': email
+    'email': email,
+    'name': username
   }
   return this.http.post<User>(link, body, this.httpOptions).pipe(
     catchError(this.handleError)

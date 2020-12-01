@@ -169,7 +169,6 @@ updateList(name, email, description, courseId, courseNum, hidden): Observable<Li
     "courseNum": courseNum,
     "hidden": hidden
   }
-  console.log(body)
   return this.http.put<List>(link, body, this.httpOptions).pipe(
     catchError(this.handleError)
   )
