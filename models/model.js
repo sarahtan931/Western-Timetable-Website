@@ -4,6 +4,12 @@ const jwt = require('jsonwebtoken');
 
 const { Schema } = mongoose;
 
+const PolicySchema = new Schema({
+  policyname: {type: String},
+  policy: {type:String},
+  date: {type: Date},
+})
+
 const UsersSchema = new Schema({
   name: {type: String},
   active: {type: Boolean},
@@ -77,7 +83,9 @@ UsersSchema.methods.toAuthJSON = function() {
 const Users = mongoose.model('Users', UsersSchema);
 const Timetable = mongoose.model('Timetables', timetables);
 const Review = mongoose.model('Review', courseReviewSchema);
+const Policy = mongoose.model('Policy', PolicySchema)
 
 module.exports = Review;
 module.exports = Timetable;
+module.exports = Users;
 module.exports = Users;

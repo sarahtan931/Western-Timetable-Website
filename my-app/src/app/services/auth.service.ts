@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { LoginComponent } from '../login/login.component';
 import { Observable, throwError } from 'rxjs';
-import { User } from '../Models/Course';
+import { User, Policy } from '../Models/Course';
 import { UrlSerializer } from '@angular/router';
 import {catchError} from 'rxjs/operators'; 
 
@@ -91,6 +91,24 @@ register(username, email, password): Observable<User>{
   return this.http.post<User>(link, body, this.httpOptions).pipe(
     catchError(this.handleError)
   );
+}
+
+makepolicy(policyname, policy): Observable<Policy>{
+  let link = `${this.url}admin/makepolicy/`
+  let body = {
+    "policyname": policyname,
+    "policyinput": policy
+  }
+  return this.http.put<Policy>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  )
+}
+
+getpolicy(): Observable<Policy[]>{
+  let link = `${this.url}open/policies/`
+  return this.http.get<Policy[]>(link).pipe(
+    catchError(this.handleError)
+  )
 }
 
 private handleError(error: HttpErrorResponse) {

@@ -1,0 +1,9 @@
+<div class='background1'>Privacy Policy
+    <form #f="ngForm" (ngSubmit)="onPPolicy(f)">
+        <textarea [(ngModel)]="ppolicy" name="ppolicy" placeholder="Enter New Privacy Policy"></textarea>
+        <button>Create Privacy Policy</button>
+        
+      </form>
+      <div class="err" ng-if="msg1">{{msg1}}</div>
+</div>
+

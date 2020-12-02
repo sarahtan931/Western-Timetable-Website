@@ -8,7 +8,6 @@ import {catchError} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CoursesService {
-   url:string = `http://${window.location.hostname}:3000/api/courses/`
    newurl:string = `http://${window.location.hostname}:3000/api/`
 
   constructor(private http:HttpClient) {}
@@ -18,12 +17,6 @@ export class CoursesService {
       'Content-Type': 'application/json'
     })
   }  
-
-//getting all courses
-getCourses(): Observable <Course[]>{
-  return this.http.get<Course[]>(this.url);
-    }
-
 
 getKeyword(keyword: string): Observable <CItem[]>{
   let link = `${this.newurl}/open/searchkeyword/${keyword}`
@@ -107,24 +100,8 @@ createReview(name, subject, catalog_nbr, review, rating): Observable<Review>{
 }
 
 
-//getting all schedules in database
-getSchedules(): Observable<Schedule[]>{
-  let link = `${this.url}schedule/show`
-  return this.http.get<Schedule[]>(link).pipe(
-    catchError(this.handleError)
-  );
-}
 
-//creating a schedule
-createSchedule(name): Observable<Schedule>{
-  let link = `${this.url}schedule/make/`
-  let body = {
-    'name': name
-  }
-  return this.http.post<Schedule>(link, body, this.httpOptions)
-  .pipe(catchError(this.handleError)
-  );
-}
+
 
 //deleting a schedule
 delList(email, name): Observable<List>{

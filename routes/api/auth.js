@@ -8,6 +8,7 @@ var newdata=JSON.parse(data);
 const Timetable = mongoose.model('Timetables');
 const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
+const Policy = mongoose.model('Policy')
 
 //show all the users schedules
 router.get('/showschedule/:email', passport.authenticate('jwt', { session: false }), (req, res) =>{
@@ -33,6 +34,7 @@ router.get('/showschedule/:email', passport.authenticate('jwt', { session: false
             }    
     })           
 })
+
 
 //make a review
 router.post('/makereview', passport.authenticate('jwt', { session: false }),[

@@ -20,11 +20,12 @@ app.use('/', express.static('static'))
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 app.use(cors())
+const dotenv = require('dotenv');
+dotenv.config();
 
 //making connection to the database
 const port = process.env.PORT || 3000;
-const uri = "mongodb+srv://stan229:Cheer931@lab3.nggdc.mongodb.net/lab-5?retryWrites=true&w=majority";
-mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
 .then((results) => app.listen(port), console.log("Connected"))
 .catch((err) => console.log(err));
 

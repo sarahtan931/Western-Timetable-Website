@@ -20,6 +20,12 @@ export class Review{
     date: Date;
 }
 
+export class Policy{
+    policyname: String;
+    policy: String;
+    date: Date;
+}
+
 export class CTimetable{
     subname: String;
     subcode: String;

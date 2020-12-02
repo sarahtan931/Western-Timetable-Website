@@ -18,6 +18,9 @@ export class HomeComponent implements OnInit {
     this.router.navigateByUrl('/login')
   }
 
+  viewpolicies(){
+    this.router.navigateByUrl('/policies')
+  }
   register(){
     this.router.navigateByUrl('/register')
   }

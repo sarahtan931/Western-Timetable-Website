@@ -21,6 +21,10 @@ import { AuthInterceptor } from './services/auth-interceptor';
 import { CreateListComponent } from './components/create-list/create-list.component';
 import { ShowUserListComponent } from './components/show-user-list/show-user-list.component';
 import { CreateReviewComponent } from './components/create-review/create-review.component';
+import { PoliciesComponent } from './policies/policies.component';
+import { CreatePoliciesComponent } from './components/create-policies/create-policies.component';
+import { CreateAupComponent } from './components/create-aup/create-aup.component';
+import { CreateDmcaComponent } from './components/create-dmca/create-dmca.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +42,11 @@ import { CreateReviewComponent } from './components/create-review/create-review.
     ActivateUserComponent,
     CreateListComponent,
     ShowUserListComponent,
-    CreateReviewComponent
+    CreateReviewComponent,
+    PoliciesComponent,
+    CreatePoliciesComponent,
+    CreateAupComponent,
+    CreateDmcaComponent,
   
   ],
   imports: [

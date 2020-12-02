@@ -1,0 +1,69 @@
+.button1{
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    position: absolute;
+    right: 5%;
+    top:15%;
+    height: 5%;
+    width: 15%;
+}
+
+.button2{
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    position: absolute;
+    right: 5%;
+    top:22%;
+    height: 5%;
+    width: 15%;
+}
+
+
+.button3{
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    position: absolute;
+    right: 22%;
+    top:15%;
+    height: 5%;
+    width: 15%;
+}
+
+.policy1{
+    background: rgb(196, 216, 253);
+    text-align:center;
+    position: absolute;
+    overflow-y: scroll;
+    width: 30%;
+    height: 500px; 
+    left: 2%;
+    top: 30%; 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+}
+
+.policy2{
+    background: rgb(196, 216, 253);
+    text-align:center;
+    position: absolute;
+    overflow-y: scroll;
+    width: 30%;
+    height: 500px; 
+    right: 35%;
+    top: 30%; 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+}
+
+.policy3{
+    background: rgb(196, 216, 253);
+    text-align:center;
+    position: absolute;
+    overflow-y: scroll;
+    width: 30%;
+    height: 500px; 
+    right: 2%;
+    top: 30%; 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+}

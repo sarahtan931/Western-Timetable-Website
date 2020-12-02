@@ -5,6 +5,7 @@ const {check , validationResult}  = require('express-validator');
 //importing models 
 const Users = mongoose.model('Users');
 const Review = mongoose.model('Review');
+const Policy = mongoose.model('Policy')
 
 //showing all users
 router.get('/showusers', passport.authenticate('jwt', { session: false }), (req, res) =>{
@@ -51,6 +52,30 @@ router.put('/setactive', passport.authenticate('jwt', { session: false }),[
         }  
     })
 }) 
+
+//create a policy
+router.put(('/makepolicy'), passport.authenticate('jwt', { session: false }), (req, res) => {
+    let policyname = req.body.policyname;
+    let policyinput = req.body.policyinput;
+    var err = validationResult(req);
+    if (!err.isEmpty()){
+        console.log(err)
+    }else{
+        Policy.findOne(({"policyname": policyname}),function(err,policy){
+            if(err || !policyinput){
+                res.status(404).send(`Error`);
+            }
+            else{
+                policy.policy = policyinput;
+                policy.date = Date.now();
+                
+            }
+            policy.save()
+        })
+        .then((result) => res.send(result))
+        .catch((err) => console.log(err))
+    }
+})
 
 //update user active status
 router.put('/setdeactive', passport.authenticate('jwt', { session: false }),[

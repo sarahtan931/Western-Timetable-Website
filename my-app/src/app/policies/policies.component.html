@@ -1,0 +1,19 @@
+<body>
+
+    <button class='button1' (click)="login()">Log In</button>
+    <button class='button2' (click)="register()">Register</button>
+    <button class="button3" (click)="home()">Home</button>
+
+    <div class='policy1'><strong>Security and Privacy Policy</strong> <Br>
+        {{policies[0].policyname}} <br> <br>
+        {{policies[0].policy}}
+    </div>
+    <div class='policy2'><strong>Acceptable Use Policy</strong> <br>
+        {{policies[1].policyname}} <br><br>
+        {{policies[1].policy}}
+    </div>
+    <div class='policy3'><strong>DMCA notice and take down Policy</strong> <br>
+        {{policies[2].policyname}} <br><br>
+        {{policies[2].policy}}
+    </div>
+</body>

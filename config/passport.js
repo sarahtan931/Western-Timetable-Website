@@ -28,7 +28,6 @@ var JwtStrategy = require('passport-jwt').Strategy,
 ExtractJwt = require('passport-jwt').ExtractJwt;
 var opts = {}
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-//opts.jwtFromRequest = ExtractJwt.fromHeader();
 opts.secretOrKey = 'secret';
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
@@ -40,12 +39,11 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
             return done(null, user);
         } else {
             return done(null, false);
-            // or you could create a new account
         }
     });
 }));
 
-/*
+
 const FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(
@@ -59,13 +57,13 @@ passport.use(
       function(accessToken, refreshToken, profile, done) {
         const { email, first_name, last_name } = profile._json;
         const userData = {
-          email,
+          email: email,
           name: first_name,
         };
         new Users(userData).save();
         done(null, profile);
       }
     )
-  );*/
+  );
 
  

@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { HomeauthComponent} from './homeauth/homeauth.component';
 import { RegisterComponent } from './register/register.component';
 import { HomeadminComponent} from './homeadmin/homeadmin.component';
+import { PoliciesComponent } from './policies/policies.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path: 'homeauth', component: HomeauthComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'homeadmin', component: HomeadminComponent},
+  {path: 'policies', component: PoliciesComponent},
   
   //otherwise re
   {path: '**', redirectTo:'home'}

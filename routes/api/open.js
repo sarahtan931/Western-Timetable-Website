@@ -12,6 +12,7 @@ var newdata=JSON.parse(data);
 const Users = mongoose.model('Users');
 const Timetable = mongoose.model('Timetables');
 const Review = mongoose.model('Review');
+const Policy = mongoose.model('Policy');
 
 //register a user
 router.post('/register', [
@@ -46,11 +47,10 @@ router.post('/register', [
 }
 });
 
-/*
-router.get('/auth/facebook', passport.authenticate('facebook'));
 
+router.get('/auth/facebook', passport.authenticate('facebook'));
 router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/',  failureRedirect: '/login' }));*/
+  passport.authenticate('facebook'));
 
 //method to log in 
 router.post('/login', (req, res, next) => {
@@ -134,6 +134,26 @@ router.get('/showschedule/',(req, res) =>{
   })           
 })
 
+//getting all policies
+router.get(('/policies'), (req, res) => {
+  Policy.find(function (err, policy) {
+    if (err || !policy || policy.length <= 0){
+        res.status(404).send(`not found`);
+    }
+    else {
+         let arr = policy.map(function(e){   
+            return{
+                policyname: e.policyname,
+                policy: e.policy,
+                date: e.date,
+            }
+        })
+        res.send(arr);
+    
+    }
+  })
+
+})
 //search for a schedule and find the timetable
 router.get('/schedule/find/:sched',(req, res) =>{
   name = req.params.sched
