@@ -26,5 +26,9 @@ export class HomeadminComponent implements OnInit {
     this.authService.logout()
     this.router.navigateByUrl('/home')
   }
+
+  viewpolicies(){
+    this.router.navigateByUrl('/policies')
+  }
  
 }

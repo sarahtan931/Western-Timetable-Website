@@ -42,6 +42,7 @@ export class User{
     password: String;
     token: String;
     role: String;
+    active: Boolean;
 }
 
 export class List{
@@ -50,4 +51,10 @@ export class List{
     date: Date;
     timetables: Array<any>;
     ownerEmail: String;
+}
+
+export class Dispute{
+    type: String;
+    details: String;
+    date: Date;
 }

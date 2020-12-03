@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CItem, Course } from '../../Models/Course';
+import { CItem, Course, Review } from '../../Models/Course';
 import {NgForm} from '@angular/forms';
 import { CoursesService } from '../../services/courses.service';
 
@@ -11,12 +11,13 @@ import { CoursesService } from '../../services/courses.service';
 })
 export class SearchCourseComponent implements OnInit {
   @Input() course:CItem[];
-  review: [];
+  review: Review[];
   subject: string;
   courseNum: string;
   errorMessage: string;
   msg: string;
   isShown: boolean = false ; // hidden by default
+  showReview: boolean = false;
 
   constructor(private courseService: CoursesService) { }
 
@@ -73,8 +74,24 @@ export class SearchCourseComponent implements OnInit {
   }
 }
 
-toggleShow() {
-this.isShown = ! this.isShown;
+
+reviews(subject, catalog_nbr){
+  this.showReview = false;
+  this.isShown =! this.isShown;
+  this.courseService.getreview(subject, catalog_nbr).subscribe({
+    next: data => {
+      this.review = data;
+      console.log(this.review)
+      if (this.review && this.isShown==true){
+        this.showReview = true;
+      }
+    },
+    error: error=> {
+      this.errorMessage = error;
+      this.msg = "Please enter a valid course.";
+      console.log('error', error)
+    }
+  })
 }
 
 }

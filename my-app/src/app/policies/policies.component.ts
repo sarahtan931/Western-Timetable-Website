@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Policy } from 'src/app/Models/Course';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-policies',
@@ -11,7 +12,7 @@ import { Policy } from 'src/app/Models/Course';
 export class PoliciesComponent implements OnInit {
   @Input() policies: Policy[];
 
-  constructor(private router: Router, private authservice: AuthService) { }
+  constructor(private router: Router, private authservice: AuthService, private location:Location) { }
 
   ngOnInit(): void {
     this.authservice.getpolicy().subscribe({
@@ -34,6 +35,9 @@ export class PoliciesComponent implements OnInit {
   }
   register(){
     this.router.navigateByUrl('/register')
+  }
+  back(){
+    this.location.back();
   }
 
 }

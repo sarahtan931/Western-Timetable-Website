@@ -10,6 +10,7 @@
 <button class='show' (click)="showReviews()">Refresh Reviews</button>
     <div class='all' *ngFor="let r of review;">
      <strong>Review ID:  {{r?.reviewID}}</strong> <br>
+     <strong>Creater: </strong> {{r?.name}} <br>
      <strong>Subject: </strong>  {{r?.subject}} {{r?.catalog_nbr}} <br>
       <strong>Hidden:</strong>  {{r?.hidden}} <br>
      <strong>Rating:</strong>   {{r?.rating}} <br>

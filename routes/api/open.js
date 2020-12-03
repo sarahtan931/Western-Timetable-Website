@@ -6,7 +6,6 @@ const app = express()
 const fs = require('fs');
 const stringSimilarity = require('string-similarity');
 const {check , validationResult}  = require('express-validator');
-const jwt = require('jsonwebtoken');
 var data=fs.readFileSync('Lab3-timetable-data.json', 'utf8');
 var newdata=JSON.parse(data);
 const Users = mongoose.model('Users');
@@ -16,7 +15,7 @@ const Policy = mongoose.model('Policy');
 
 //register a user
 router.post('/register', [
-  check("email").normalizeEmail().isEmail(),
+  check("email").isEmail(),
   check('name').trim().matches(/^([0-9A-Za-z\u00AA-\uFFDC]*)$/).isLength({ min: 1, max:20 }).escape()
 ], (req, res, next) => {
   const { body: { user } } = req;
@@ -48,9 +47,11 @@ router.post('/register', [
 });
 
 
-router.get('/auth/facebook', passport.authenticate('facebook'));
-router.get('/auth/facebook/callback',
-  passport.authenticate('facebook'));
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/',
+                                      failureRedirect: '/login' }));
 
 //method to log in 
 router.post('/login', (req, res, next) => {
@@ -235,6 +236,29 @@ router.get('/findbyboth/:subject/:catalog_nbr/', (req,res) =>{
     }
 }
 )
+
+router.get(('/reviews/:subject/:catalog_nbr'), (req,res) =>{
+  let subject = req.params.subject;
+  let catalog_nbr = req.params.catalog_nbr;
+  let newarr = [];
+  Review.find(({"subject": subject,"catalog_nbr": catalog_nbr, "hidden": false}), function (err, review) { 
+        review.map(function(e) {
+        newarr.push({
+          "subject": e.subject,
+          "catalog_nbr": e.catalog_nbr,
+        "name": e.name,
+        "date": e.date,
+        "review": e.review,
+        "rating": e.rating
+      })
+  }) 
+  const sorted = newarr.sort((a, b) => b.date - a.date) 
+  res.send(sorted)
+  
+})
+  
+})
+
 
 //searching by subject
 router.get('/findbysubject/:subject', (req,res) =>{

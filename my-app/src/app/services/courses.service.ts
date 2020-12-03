@@ -25,6 +25,13 @@ getKeyword(keyword: string): Observable <CItem[]>{
   )
 }
 
+getreview(subject, coursenum): Observable <Review[]>{
+  let link = `${this.newurl}/open/reviews/${subject}/${coursenum}`
+  return this.http.get<Review[]>(link).pipe(
+    catchError(this.handleError)
+  )
+}
+
 toggleReview(id: String): Observable <Review>{
   let body = {
     "review" : id

@@ -10,6 +10,12 @@ const PolicySchema = new Schema({
   date: {type: Date},
 })
 
+const DisputeSchema = new Schema({
+  type: {type:String},
+  details: {type: String},
+  date: {type: Date}
+})
+
 const UsersSchema = new Schema({
   name: {type: String},
   active: {type: Boolean},
@@ -84,8 +90,10 @@ const Users = mongoose.model('Users', UsersSchema);
 const Timetable = mongoose.model('Timetables', timetables);
 const Review = mongoose.model('Review', courseReviewSchema);
 const Policy = mongoose.model('Policy', PolicySchema)
+const Dispute = mongoose.model('Dispute', DisputeSchema)
 
 module.exports = Review;
 module.exports = Timetable;
 module.exports = Users;
-module.exports = Users;
+module.exports = Policy;
+module.exports = Dispute;

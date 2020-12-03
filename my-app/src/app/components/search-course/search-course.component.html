@@ -16,7 +16,7 @@
     <Strong> {{c?.subject}} {{c?.catalog_nbr}}</Strong><br>
             Class Section: {{c?.class_section}} <br>
             Component: {{c?.ssr_component}}
-    <button (click)="toggleShow()">Show More</button>   
+    <button (click)="reviews(c.subject, c.catalog_nbr)">Show</button>  
     <div *ngIf="isShown">
       <div class='more'>
        <strong>Time:</strong>  {{c?.start_time}}{{c?.end_time}} <br>
@@ -24,15 +24,21 @@
        <strong>Days: </strong> {{c?.days}} <Br>
         <strong>Description:</strong>  {{c?.descrlong}} <br>
       </div>
-    <div class='review' *ngFor="let c of course; let r of c.reviews">
-       <Strong>Review:</Strong>  {{ r.review }} <br>
-        <strong>Rating: </strong> {{ r.rating }} <br>
-      <strong>Creater:</strong>   {{ r.name }} <br>
-      <strong>Date:</strong>   {{ r.date }}
-    </div>
-    
   </div>
+</div>
  </div>
- </div>
+
+ <div class='review'>
+   Review
+   <div *ngIf="showReview">
+  <div *ngFor='let r of review'  class='r'>
+    {{r?.subject}}{{r?.catalog_nbr}} <br>
+    <Strong>Review:</Strong>  {{ r.review }} <br>
+    <strong>Rating: </strong> {{ r.rating }} <br>
+     <strong>Creater:</strong>   {{ r.name }} <br>
+    <strong>Date:</strong>   {{ r.date }}
+  </div>
+</div>
+</div>
  </body>
  

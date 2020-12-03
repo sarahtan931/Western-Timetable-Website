@@ -1,0 +1,34 @@
+<div class='background'>   
+In the event of a DMCA takedown request, the operator must comply with the request immediately. <Br>
+<strong>Solution <br></strong><br>
+1. The administrator can log the day the DMCA request was received. The request will include the claim of the infringing material and the users name and email address. It will also include the reason the user wants it removed. <br><br>
+2. The administrator can log the date the notice was sent. They can also include a description and any other relevant information. <br><br>
+3. The administrator can also log the date dispute was received. They can also include a description and any other relevant information. <br><br>
+4. The administrator can look up previous disputes and requests and see all the information, dates and details if needed. <br><br>
+5. The administrator can hide reviews with alleged copyright or AUP violations through the reviews panel. <br><br>
+6. The administrator can restore displaying any of contested reviews through the reviews panel <br>
+</div>
+
+<div class='background2'>
+<button (click)=showDispute()>Show Disputes</button>
+<button (click)=logDispute()>Log Dispute</button>
+
+<div *ngIf="isDispute">
+<div *ngFor="let d of disputes" class='disputes'>
+ {{d.type}} <br>
+ {{d.date}} <br>
+ {{d.details}} <br>
+</div>
+</div>
+
+<div *ngIf="isLog">
+    <form #f="ngForm" (ngSubmit)="onLog(f)">
+        <input [(ngModel)]="type" name="type" placeholder="enter type"> 
+        <textarea [(ngModel)]="details" name="details" placeholder="enter details about dispute"></textarea>
+        <button>Log Dispute</button>
+        
+      </form>
+      <div class="err" ng-if="msg">{{msg}}</div>
+</div>
+</div>
+

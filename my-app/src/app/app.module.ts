@@ -25,6 +25,7 @@ import { PoliciesComponent } from './policies/policies.component';
 import { CreatePoliciesComponent } from './components/create-policies/create-policies.component';
 import { CreateAupComponent } from './components/create-aup/create-aup.component';
 import { CreateDmcaComponent } from './components/create-dmca/create-dmca.component';
+import { DisputeComponent } from './components/dispute/dispute.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { CreateDmcaComponent } from './components/create-dmca/create-dmca.compon
     CreatePoliciesComponent,
     CreateAupComponent,
     CreateDmcaComponent,
+    DisputeComponent,
   
   ],
   imports: [

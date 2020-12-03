@@ -1,9 +1,9 @@
 <div class='background'>
-    
+    Create Review
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
         <input [(ngModel)]="subject" name="subject" placeholder="Enter Subject">
         <input [(ngModel)]="catalog_nbr" name="catalog_nbr" placeholder="Enter Catalog Number">
-        <input [(ngModel)]="review" name="review" placeholder="Enter Review" class='review'>
+        <textarea [(ngModel)]="review" name="review" placeholder="Enter Review" class='review'></textarea>
         <input [(ngModel)]="rating" name="rating" placeholder="Enter Rating" type="number">
         <button>Submit</button>
       </form>

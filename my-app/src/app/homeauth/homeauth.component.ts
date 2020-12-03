@@ -23,4 +23,7 @@ export class HomeauthComponent implements OnInit {
     this.router.navigateByUrl('/home')
   }
 
+  viewpolicies(){
+    this.router.navigateByUrl('/policies')
+  }
 }

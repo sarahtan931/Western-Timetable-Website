@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { LoginComponent } from '../login/login.component';
 import { Observable, throwError } from 'rxjs';
-import { User, Policy } from '../Models/Course';
+import { User, Policy, Dispute } from '../Models/Course';
 import { UrlSerializer } from '@angular/router';
 import {catchError} from 'rxjs/operators'; 
 
@@ -35,6 +35,22 @@ login(email, password): Observable<User>{
 showUsers(): Observable <User[]>{
   let link = `${this.url}admin/showusers`
   return this.http.get<User[]>(link);
+}
+
+showDispute(): Observable<Dispute[]>{
+  let link = `${this.url}admin/dispute`;
+  return this.http.get<Dispute[]>(link);
+}
+
+makeDispute(type, details): Observable<Dispute>{
+  let body= {
+    'type': type,
+    'details': details
+  }
+  let link = `${this.url}admin/ddocument`;
+  return this.http.post<Dispute>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  )
 }
 
 setActive(email): Observable <User>{

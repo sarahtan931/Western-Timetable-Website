@@ -48,8 +48,10 @@ export class ActivateUserComponent implements OnInit {
   }
 
   setDeActive(email){
+    console.log(email)
     this.msg = ""
     this.msgcomplete = ""
+
     this.authService.setDeActive(email).subscribe({
       next: data => {
         this.user = data;
