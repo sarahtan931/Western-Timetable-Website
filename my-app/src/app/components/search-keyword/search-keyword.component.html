@@ -9,18 +9,41 @@
         <input [(ngModel)]="keyword" name="keyword" placeholder="keyword">
         <button>Submit</button>
       </form>
+      <button (click)="showmore()">Expand</button>
 
 <div class="err" ng-if="errorMessage">{{ errorMessage }}{{msg}}</div>
 
-<table>
-  <tbody>
-      <tr *ngFor="let c of course">
-        <td>
+<div class='course'>
+      <div *ngFor="let c of course" class='c'>
+        
         <Strong>{{c?.catalog_nbr}}
-        {{c?.subject}}</Strong>
-      </td> 
-      </tr>
-  </tbody>
-</table>
+        {{c?.subject}}</Strong><br>
+        {{c?.classname}}<br>
+        {{c?.class_section}}<br>
+        <button (click)='reviews(c.subject, c.catalog_nbr)'>Show Review</button>
+        
+        <div *ngIf='isShow' class='more'>
+          {{c?.start_time}}
+          {{c?.end_time}}<br>
+          {{c?.campus}}<br>
+          {{c?.days}}<br>
+          {{c?.descrlong}}
+        </div>
+      </div>
+    </div>
+
+<div class='review' *ngIf="togglereview">
+  Review
+  <div ng-if="showReview">
+ <div *ngFor='let r of review' class='r'>
+   {{r?.subject}}{{r?.catalog_nbr}} <br>
+   <Strong>Review:</Strong>  {{ r.review }} <br>
+   <strong>Rating: </strong> {{ r.rating }} <br>
+    <strong>Creater:</strong>   {{ r.name }} <br>
+   <strong>Date:</strong>   {{ r.date }}
+ </div>
+</div>
+</div>
+
 </div>
 </body>

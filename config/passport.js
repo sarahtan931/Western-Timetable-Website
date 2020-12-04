@@ -11,6 +11,8 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
+//from passport documentation
+//http://www.passportjs.org/packages/passport-local/
 passport.use(new LocalStrategy({
   usernameField: 'user[email]',
   passwordField: 'user[password]',
@@ -24,6 +26,8 @@ passport.use(new LocalStrategy({
     }).catch(done);
 }));
 
+//from passport documentation
+//http://www.passportjs.org/packages/passport-jwt/
 var JwtStrategy = require('passport-jwt').Strategy,
 ExtractJwt = require('passport-jwt').ExtractJwt;
 var opts = {}
@@ -43,27 +47,7 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
     });
 }));
 
-const FacebookStrategy = require('passport-facebook').Strategy;
 
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: "497600587844856",
-      clientSecret: "8222487aa754d75907c12cb09dcbf40c",
-      callbackURL: "http://localhost:3000/auth/facebook/callback",
-      profileFields: ["email", "name"]
-    },
-      function(accessToken, refreshToken, profile, done) {
-        const { email, first_name, last_name } = profile._json;
-        const userData = {
-          email: email,
-          name: first_name,
-        };
-        new Users(userData).save();
-        done(null, profile);
-      }
-    )
-  );
 
  
 

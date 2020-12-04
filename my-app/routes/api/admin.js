@@ -94,6 +94,7 @@ router.put('/setactive', passport.authenticate('jwt', { session: false }),[
 //create a policy
 router.put(('/makepolicy'), passport.authenticate('jwt', { session: false }),[
     check('policyinput').isLength({ min: 5, max:1000 }).escape(),
+    check('policyname').isLength({min: 5, max: 100}).escape()
 ], (req, res) => {
     let policyname = req.body.policyname;
     let policyinput = req.body.policyinput;

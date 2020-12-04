@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CItem } from '../../Models/Course';
+import { CItem, Review } from '../../Models/Course';
 import { CoursesService } from '../../services/courses.service';
 import {NgForm} from '@angular/forms';
 
@@ -14,10 +14,20 @@ export class SearchKeywordComponent implements OnInit {
   keyword: string;
   errorMessage: string;
   msg: string;
+  isShow: Boolean;
+  review: Review[];
+  showReview: Boolean;
+  togglereview: Boolean;
 
   constructor(private courseService:CoursesService) { }
 
   ngOnInit(){
+    this.isShow = false;
+    this.togglereview = false;
+  }
+
+  showmore(){
+    this.isShow = !this.isShow;
   }
   onSubmit(f: NgForm) {
     this.errorMessage = "";
@@ -32,6 +42,25 @@ export class SearchKeywordComponent implements OnInit {
       error: error=> {
         this.errorMessage = error;
         this.msg = "Please enter a valid keyword.";
+        console.log('error', error)
+      }
+    })
+  }
+
+  reviews(subject, catalog_nbr){
+    this.togglereview = !this.togglereview;
+    this.showReview = false;
+    this.courseService.getreview(subject, catalog_nbr).subscribe({
+      next: data => {
+        this.review = data;
+        console.log(this.review)
+        if (this.review){
+          this.showReview = true;
+        }
+      },
+      error: error=> {
+        this.errorMessage = error;
+        this.msg = "Please enter a valid course.";
         console.log('error', error)
       }
     })

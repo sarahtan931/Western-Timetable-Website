@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
-const express = require('express');
-const app = express()
 const fs = require('fs');
 const stringSimilarity = require('string-similarity');
 const {check , validationResult}  = require('express-validator');
@@ -12,15 +10,6 @@ const Users = mongoose.model('Users');
 const Timetable = mongoose.model('Timetables');
 const Review = mongoose.model('Review');
 const Policy = mongoose.model('Policy');
-/*
-const path = require('path');
-// Point to directory containing static files
-router.use(express.static(path.join(__dirname, 'dist/my-app')));
-//catch all other routes to return the index file
-router.get('*', (req,res) => {
-res.sendFile(path.join(__dirname,'dist/my-app/index.html'));
-});*/
-
 
 //register a user
 router.post('/register', [
@@ -55,6 +44,7 @@ router.post('/register', [
 }
 });
 
+//update password
 router.post('/updatepassword', (req,res,next) => {
   email = req.body.email;
   password = req.body.password;
@@ -72,7 +62,8 @@ router.post('/updatepassword', (req,res,next) => {
 })
 
 
-//method to log in 
+//method to log in referenced from 
+//https://www.freecodecamp.org/news/learn-how-to-handle-authentication-with-node-using-passport-js-4a56ed18e81e/
 router.post('/login', (req, res, next) => {
  const { body: { user } } = req;
   if(!user.email) {
@@ -106,8 +97,17 @@ router.get('/searchkeyword/:keyword', (req, res) => {
       const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.className) > .5)
       let arr = data.map(function(e){
         return{
+          classname: e.className,
+          class_section: e.course_info[0].class_section,
+          ssr_component:e.course_info[0].ssr_component,
+          course_info: e.course_info[0],
           catalog_nbr: e.catalog_nbr,
-          subject: e.subject
+          subject: e.subject,
+          start_time: e.course_info[0].start_time,
+          end_time: e.course_info[0].end_time,
+          descrlong: e.course_info[0].descrlong,
+          campus: e.course_info[0].campus,
+          days : e.course_info[0].days
         }
       })
       res.send(arr)
@@ -117,8 +117,17 @@ router.get('/searchkeyword/:keyword', (req, res) => {
         const data = newdata.filter(p => stringSimilarity.compareTwoStrings(keyword, p.catalog_nbr.toString()) > .8)
         let arr = data.map(function(e){
         return{
+          classname: e.className,
+          class_section: e.course_info[0].class_section,
+          ssr_component:e.course_info[0].ssr_component,
+          course_info: e.course_info[0],
           catalog_nbr: e.catalog_nbr,
-          subject: e.subject
+          subject: e.subject,
+          start_time: e.course_info[0].start_time,
+          end_time: e.course_info[0].end_time,
+          descrlong: e.course_info[0].descrlong,
+          campus: e.course_info[0].campus,
+          days : e.course_info[0].days
         }
         })
         res.send(arr)
@@ -256,6 +265,7 @@ router.get('/findbyboth/:subject/:catalog_nbr/', (req,res) =>{
 }
 )
 
+//searching reviews by the course
 router.get(('/reviews/:subject/:catalog_nbr'), (req,res) =>{
   let subject = req.params.subject;
   let catalog_nbr = req.params.catalog_nbr;
@@ -327,7 +337,6 @@ router.get('/findbynum/:catalog_nbr/', (req,res) =>{
   let courseNum = req.params.catalog_nbr;
   courseNum = courseNum.toUpperCase().toString();
   let newarr = []
-
   //making sure the course number is a valid size
   if(courseNum.length < 4){
       res.status(404).send(`Please send a valid course number`);

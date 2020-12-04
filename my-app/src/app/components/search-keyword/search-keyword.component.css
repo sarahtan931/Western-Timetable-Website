@@ -13,17 +13,36 @@
     border-radius: 5px;
 }
 
-table, th, td {
-    border: 1px solid black;
-    width: 100%;
-    background-color: rgb(223, 250, 253);
-}
 
-tbody:empty {
-    display: none;
- }
 
 .err{
     background-color: rgb(255, 188, 198);
     text-align: center;
+}
+
+.more{
+    background-color: lightpink;
+}
+
+.review{
+    width: 48%;
+    float: right;
+    border: solid black;
+    background-color: lightyellow;
+}
+
+.course{
+    width: 50%;
+    float: left;
+    border: solid black;
+    background-color: rgb(255, 243, 224);
+}
+
+.c{
+    border: solid black
+}
+
+
+.r{
+    border: solid black;
 }

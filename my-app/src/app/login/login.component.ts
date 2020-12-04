@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
         if (error == 422){
         this.errorMessage = "Your account is deactivated. Please contact the administrator"
         }else{
-        this.errorMessage = "Please enter a valid email address"
+        this.errorMessage = "Login Unsucessfull"
         }
       }
     })

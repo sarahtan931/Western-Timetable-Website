@@ -98,7 +98,7 @@ router.post('/makeschedule', [
         }
     })
     Timetable.findOne(({"name": name, "owner": owner}), function (err, timetable) {
-        if (err || timetable || typeof courseNum == "undefined" || typeof courseId == "undefined"){ 
+        if (err || timetable || courseNum.length < 0  || courseId.length < 0){ 
             res.status(404).send(`Already Exists`);
         }
         else{
