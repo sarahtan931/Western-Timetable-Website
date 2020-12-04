@@ -9,6 +9,7 @@ import {catchError} from 'rxjs/operators';
 })
 export class CoursesService {
    newurl:string = `http://${window.location.hostname}:3000/api/`
+ //newurl: string = `/api/`
 
   constructor(private http:HttpClient) {}
 

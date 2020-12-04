@@ -26,12 +26,20 @@ dotenv.config();
 //making connection to the database
 const port = process.env.PORT || 3000;
 mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
-.then((results) => app.listen(port), console.log("Connected"))
+.then((results) => app.listen(port), console.log("Connected" + port))
 .catch((err) => console.log(err));
 
+const path = require('path');
+/*
+// Point to directory containing static files
+app.use(express.static(path.join(__dirname, 'dist/my-app/')));
+//catch all other routes to return the index file
+app.get('*', (req,res) => {
+res.sendFile(path.join(__dirname,'dist/my-app/index.html'));
+});*/
 
 
-require('./models/model');
-require('./config/passport');
+require('../models/model');
+require('../config/passport');
 app.use(require('./routes'));
 

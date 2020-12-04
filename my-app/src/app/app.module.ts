@@ -26,6 +26,7 @@ import { CreatePoliciesComponent } from './components/create-policies/create-pol
 import { CreateAupComponent } from './components/create-aup/create-aup.component';
 import { CreateDmcaComponent } from './components/create-dmca/create-dmca.component';
 import { DisputeComponent } from './components/dispute/dispute.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { DisputeComponent } from './components/dispute/dispute.component';
     CreateAupComponent,
     CreateDmcaComponent,
     DisputeComponent,
+    ChangePasswordComponent,
   
   ],
   imports: [

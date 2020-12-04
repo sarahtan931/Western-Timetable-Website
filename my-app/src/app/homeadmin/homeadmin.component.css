@@ -30,3 +30,8 @@ div{
     height: 5%;
     width: 15%;
 }
+
+.changepassword{
+    position: absolute;
+    right: 60%;
+}

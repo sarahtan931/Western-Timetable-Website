@@ -14,6 +14,7 @@ export class ShowUserListComponent implements OnInit {
   timetable:Schedule[];
   dellist: List;
   isShown: boolean = false ;
+  isDelete: boolean = false;
   email: String;
   title: String;
   msg: String;
@@ -49,7 +50,7 @@ export class ShowUserListComponent implements OnInit {
           setTimeout(()=>{                     
             this.showLists();
           }, 500);
-  
+          this.isDelete = false;
         },
         error: error=> {
          
@@ -94,6 +95,14 @@ export class ShowUserListComponent implements OnInit {
         console.log('error', error)
       }
     })
+  }
+
+  confirmdel(){
+     this.isDelete = !this.isDelete;
+  }
+
+  hideDelete(){
+    this.isDelete = false;
   }
 
   submit(f: NgForm) {

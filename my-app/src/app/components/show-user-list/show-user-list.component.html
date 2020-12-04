@@ -12,11 +12,16 @@
               Date Created: {{l?.date}}<Br>
               Number of courses: {{l?.timetables.length}}<Br>
               Hidden: {{l?.hidden}} <br>
-                <button (click)="delList(l.name)">Delete List</button>
+                <button (click)="confirmdel()">Delete</button>
                 <button (click)="showtimetable(l.name)">Show Timetable</button>
                 <button (click)="hidetimetable()">Hide Timetable</button>
                 <button (click)="toggleUpdate(l.name, l.owner)">Update</button>
                 <button (click)="hideupdate()">Hide Update</button>
+            <div *ngIf='isDelete'>
+              Are you sure you want to delete {{l.name}}
+              <button (click)="delList(l.name)">Delete List</button>
+              <button (click)='hideDelete()'>No Thanks</button>
+            </div>
             <div class='more' *ngIf="isShown">
               Description: {{l?.description}}<br>
 

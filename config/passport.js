@@ -43,7 +43,6 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
     });
 }));
 
-
 const FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(
@@ -65,5 +64,7 @@ passport.use(
       }
     )
   );
+
+ 
 
  

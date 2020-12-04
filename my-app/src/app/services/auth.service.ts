@@ -11,6 +11,7 @@ import {catchError} from 'rxjs/operators';
 })
 export class AuthService {
   url:string = `http://${window.location.hostname}:3000/api/`
+  //url: string = `/api/`
 
   constructor(private http: HttpClient) { }
 
@@ -49,6 +50,17 @@ makeDispute(type, details): Observable<Dispute>{
   }
   let link = `${this.url}admin/ddocument`;
   return this.http.post<Dispute>(link, body, this.httpOptions).pipe(
+    catchError(this.handleError)
+  )
+}
+
+changePassword(email, password): Observable<User>{
+  let body = {
+    "email": email,
+    'password': password
+  }
+  let link = `${this.url}open/updatepassword`;
+  return this.http.post<User>(link, body, this.httpOptions).pipe(
     catchError(this.handleError)
   )
 }

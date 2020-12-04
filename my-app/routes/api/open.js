@@ -12,6 +12,15 @@ const Users = mongoose.model('Users');
 const Timetable = mongoose.model('Timetables');
 const Review = mongoose.model('Review');
 const Policy = mongoose.model('Policy');
+/*
+const path = require('path');
+// Point to directory containing static files
+router.use(express.static(path.join(__dirname, 'dist/my-app')));
+//catch all other routes to return the index file
+router.get('*', (req,res) => {
+res.sendFile(path.join(__dirname,'dist/my-app/index.html'));
+});*/
+
 
 //register a user
 router.post('/register', [
@@ -46,12 +55,22 @@ router.post('/register', [
 }
 });
 
+router.post('/updatepassword', (req,res,next) => {
+  email = req.body.email;
+  password = req.body.password;
+  Users.findOne(({"email": email}), function (err, user) {
+    if(!password) {
+      return res.status(422).send('Error');
+    }else{
 
-app.get('/auth/facebook', passport.authenticate('facebook'));
+    }
+    user.setPassword(password);
+    user.save();
+    res.send(user)
+  })
 
-app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/login' }));
+})
+
 
 //method to log in 
 router.post('/login', (req, res, next) => {
