@@ -25,6 +25,11 @@ export class RegisterComponent implements OnInit {
   home(){
     this.router.navigateByUrl('/home')
   }
+
+  login(){
+    this.router.navigateByUrl('/login')
+  }
+
   onSubmit(f: NgForm){
     this.errorMessage = "";
     this.msg = "";

@@ -1,6 +1,6 @@
 <div class='background1'>Privacy Policy
     <form #f="ngForm" (ngSubmit)="onPPolicy(f)">
-        <textarea [(ngModel)]="ppolicy" name="ppolicy" placeholder="Please enter new privacy policy"></textarea>
+        <textarea [(ngModel)]="ppolicy" name="ppolicy"  placeholder={{policies[0].policy}}></textarea>
         <button>Create Privacy Policy</button>
         
       </form>

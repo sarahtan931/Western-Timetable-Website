@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CoursesService } from '../../services/courses.service';
-import { List } from '../../Models/Course';
+import { List, Schedule } from '../../Models/Course';
 
 @Component({
   selector: 'app-show-lists',
@@ -9,9 +9,11 @@ import { List } from '../../Models/Course';
 })
 export class ShowListsComponent implements OnInit {
   @Input() list: List[];
-  timetables: Array<any>;
-  isShown: boolean = false ;
-  
+  timetable:Schedule[];
+  isShown: boolean = false;
+  msg: String;
+  isTimetable: boolean = false;
+  toggleT: boolean = false;
 
   constructor(private courseServices: CoursesService) { }
 
@@ -28,6 +30,26 @@ export class ShowListsComponent implements OnInit {
 
   toggleShow() {
     this.isShown = ! this.isShown;
+    }
+
+  showTimetable(name) {
+    this.toggleT = !this.toggleT;
+    this.isTimetable = false;
+      this.msg = "";
+      this.courseServices.showTimetable(name).subscribe({
+        next: data => {
+          this.timetable = data
+          if(this.timetable){
+            this.isTimetable = true;
+          }
+          console.log(data)
+        },
+        error: error=> {
+          this.msg = error;
+          this.msg = "Please enter a valid course.";
+          console.log('error', error)
+        }
+      })
     }
 
   }

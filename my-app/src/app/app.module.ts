@@ -12,7 +12,6 @@ import { SearchKeywordComponent } from './components/search-keyword/search-keywo
 import { ShowListsComponent } from './components/show-lists/show-lists.component';
 import { SearchCourseComponent } from './components/search-course/search-course.component';
 import { RegisterComponent } from './register/register.component';
-import { ShowTimetableComponent } from './components/show-timetable/show-timetable.component';
 import { HomeadminComponent } from './homeadmin/homeadmin.component';
 import { HideReviewComponent } from './components/hide-review/hide-review.component';
 import { ActivateUserComponent } from './components/activate-user/activate-user.component';
@@ -38,7 +37,6 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
     ShowListsComponent,
     SearchCourseComponent,
     RegisterComponent,
-    ShowTimetableComponent,
     HomeadminComponent,
     HideReviewComponent,
     ActivateUserComponent,

@@ -3,25 +3,45 @@
 <meta charset="utf-8">
 
 <body>
-<div class="background2">
-  <div>Public Course Lists</div>
-<button (click)="showLists()">Show Course Lists</button>
-<button (click)="toggleShow()">Expand Course Lists</button>
+  <div class="background2">
+    <div>Public Course Lists</div>
+    <button (click)="showLists()">Show Course Lists</button>
+    <button (click)="toggleShow()">Expand Course Lists</button>
+    <div class='all' *ngFor="let l of list;">
+      <strong>Course List Name: </strong>{{l?.name}}<Br>
+      <strong>Owner: </strong> {{l?.owner}}<Br>
+      <strong>Date Created: </strong>{{l?.date}}<Br>
+      <Strong> Number of courses:</Strong> {{l?.courses}}<Br>
+      <button (click)=showTimetable(l.name)>Show Timetable</button>
 
-
-        <div class='all' *ngFor="let l of list;">
-          <strong>Course List Name: </strong>{{l?.name}}<Br>
-         <strong>Owner: </strong> {{l?.owner}}<Br>
-          <strong>Date Created: </strong>{{l?.date}}<Br>
-         <Strong> Number of courses:</Strong> {{l?.courses}}<Br>
-
-          <div class='more' *ngIf="isShown">
-         <strong>Description:</strong>  {{l?.description}}<br>
-        <div class='course' *ngFor= "let t of l.timetables">
-          {{t.catalog_nbr}} {{t?.classname}} 
+      <div class='more' *ngIf="isShown">
+        <strong>Description:</strong> {{l?.description}}<br>
+        <div class='course' *ngFor="let t of l.timetables">
+          {{t.catalog_nbr}} {{t?.classname}}
         </div>
       </div>
     </div>
 
-</div>
+  </div>
+
+  <div class="background3">
+    <div>Show Timetable for a given course list</div>
+    <div *ngIf='toggleT'>
+      <div *ngIf='isTimetable'>
+      <div *ngFor="let t of timetable" class='timetable'>
+        <Strong> {{t?.subject}} {{t?.catalog_nbr}}
+        </Strong>
+        <strong>Class Name: </strong>{{t?.classname}}<br>
+        <strong>Class Section: </strong> {{t?.class_section}} <br>
+        <strong>SSR_Component</strong> {{t?.ssr_component}} <Br>
+        <strong>Class Section</strong> {{t?.class_section}} <br>
+        <strong>Time</strong> {{t?.start_time}}
+        {{t?.end_time}} <Br>
+        <strong>Campus:</strong> {{t?.campus}} <br>
+        <strong>Days: </strong>{{t?.days}} <br>
+        {{t?.descrlong}} <Br>
+      </div>
+    </div>
+    </div>
+  </div>
 </body>

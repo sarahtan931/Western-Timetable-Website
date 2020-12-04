@@ -23,6 +23,11 @@ export class LoginComponent implements OnInit {
     this.router.navigateByUrl('/home')
   }
 
+  register(){
+    this.router.navigateByUrl('/register')
+  }
+
+
   onSubmit(f: NgForm){
     this.errorMessage = "";
     if (!f.value.email){

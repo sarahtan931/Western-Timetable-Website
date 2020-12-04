@@ -1,6 +1,6 @@
 <div class='background3'>DMCA Notice Takedown
     <form #f="ngForm" (ngSubmit)="onDPolicy(f)">
-        <textarea [(ngModel)]="dpolicy" name="dpolicy" placeholder="Enter New DMCA Policy"></textarea>
+        <textarea [(ngModel)]="dpolicy" name="dpolicy" placeholder="{{policies[2].policy}}"></textarea>
         <button>Create DMCA Policy</button>
       </form>
       <div class="err" ng-if="msg3">{{msg3}}</div>

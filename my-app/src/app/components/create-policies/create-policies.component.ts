@@ -11,15 +11,14 @@ import { AuthService } from '../../services/auth.service';
 export class CreatePoliciesComponent implements OnInit {
 @Input()
 policies: Policy[];
-ppolicy: String;
-apolicy: String;
-dpolicy: String;
-pname: String;
 newpolicy: Policy;
 newpolicy2: Policy;
 msg1: String;
 msg2: String;
 msg3: String;
+ppolicy: String;
+apolicy: String;
+dpolicy: String;
 
   constructor(private authservice: AuthService) { }
 

@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CreateDmcaComponent implements OnInit {
   @Input()
+policies: Policy[];
 ppolicy: String;
 apolicy: String;
 dpolicy: String;
@@ -23,6 +24,15 @@ msg3: String;
   constructor(private authservice: AuthService) { }
 
   ngOnInit(): void {
+    this.authservice.getpolicy().subscribe({
+      next: data => {
+        this.policies = data;
+        console.log(data)
+      },
+      error: error=> {
+        console.log('error', error);
+      }
+    })
   }
 
   

@@ -1,6 +1,6 @@
 <div class='background2'>Acceptable Use Policy
     <form #f="ngForm" (ngSubmit)="onAPolicy(f)">
-        <textarea [(ngModel)]="apolicy" name="apolicy" placeholder="Enter New AUP Policy"></textarea>
+        <textarea [(ngModel)]="apolicy" name="apolicy" placeholder="{{policies[1].policy}}"></textarea>
         <button>Create AUP Policy</button>
       </form>
       <div class="err" ng-if="msg2">{{msg2}}</div>

@@ -11,8 +11,9 @@ import { AuthService } from '../../services/auth.service';
 export class CreateAupComponent implements OnInit {
   @Input()
   ppolicy: String;
-  apolicy: String;
-  dpolicy: String;
+apolicy: String;
+dpolicy: String;
+  policies: Policy[];
   pname: String;
   newpolicy: Policy;
   newpolicy2: Policy;
@@ -23,6 +24,15 @@ export class CreateAupComponent implements OnInit {
   constructor(private authservice: AuthService) { }
 
   ngOnInit(): void {
+    this.authservice.getpolicy().subscribe({
+      next: data => {
+        this.policies = data;
+        console.log(data)
+      },
+      error: error=> {
+        console.log('error', error);
+      }
+    })
   }
 
   onAPolicy(f: NgForm){
